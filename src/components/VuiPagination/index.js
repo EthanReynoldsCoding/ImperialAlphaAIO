@@ -32,8 +32,6 @@ const Context = createContext();
 
 const VuiPagination = forwardRef(
   ({ item, variant, color, size, active, children, ...rest }, ref) => {
-    // const context = useContext(item ? Context : null);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const context = item ? useContext(Context) : null;
     const paginationSize = context ? context.size : null;
 
