@@ -123,6 +123,7 @@ function Header() {
                 value={tabValue}
                 onChange={handleSetTabValue}
                 sx={{ background: "transparent", display: "flex", justifyContent: "flex-end" }}
+                style={{ margin: "auto" }}
               >
                 <Tab label="DAILY" icon={<IoCube color="white" size="16px" />} />
                 <Tab label="MONTHLY" icon={<IoDocument color="white" size="16px" />} />
