@@ -29,7 +29,6 @@ import ToDoListWidget from "widgets/TDList";
 import Presale from "widgets/presold";
 import Calendar from "layouts/calendar/index.js";
 
-
 // React icons
 import { IoIosRocket } from "react-icons/io";
 import { IoGlobe } from "react-icons/io5";
@@ -259,26 +258,29 @@ function DailyDashboard() {
             </Grid>
           </Grid>
         </VuiBox>
-        <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch" mb={3}>
-  <Grid item xs={12} md={6} lg={12}>
-    <Presale />
-  </Grid>
-</Grid>
-<Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
-  <Grid item xs={12} md={6} lg={8}>
-    <Projects />
-  </Grid>
-  <Grid item xs={12} md={6} lg={4}>
-    <ToDoListWidget />
-    </Grid>
-  <Grid item xs={12} md={6} lg={12}>
-    <Presale />
-     
-  </Grid>
-</Grid>
-
-
-
+        <Grid
+          container
+          spacing={3}
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          mb={3}
+        >
+          <Grid item xs={12} md={6} lg={12}>
+            <Presale />
+          </Grid>
+        </Grid>
+        <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
+          <Grid item xs={12} md={6} lg={8}>
+            <Projects />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <ToDoListWidget />
+          </Grid>
+          <Grid item xs={12} md={6} lg={12}>
+            <Presale />
+          </Grid>
+        </Grid>
       </VuiBox>
       <Footer />
     </DashboardLayout>
@@ -286,7 +288,3 @@ function DailyDashboard() {
 }
 
 export default DailyDashboard;
-
-
-
-

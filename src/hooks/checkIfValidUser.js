@@ -11,8 +11,6 @@ const checkIfValidUser = async (token) => {
 
   let inGuild = false;
 
-  let count = 0; // For testing purpose
-
   const serverId = process.env.REACT_APP_DISCORD_SERVER_ID;
 
   let idx = 0;
@@ -23,10 +21,7 @@ const checkIfValidUser = async (token) => {
       inGuild = true;
     }
     idx++;
-    count++;
   }
-
-  // console.log(count);
 
   if (inGuild) {
     const rolesRes = await fetch(
@@ -43,11 +38,12 @@ const checkIfValidUser = async (token) => {
 
     const rolesLength = roles.length;
 
-    let idx = 0;
-    while (idx < rolesLength && !validUser) {
-      if (roles[idx] === roleId) {
+    let i = 0;
+    while (i < rolesLength && !validUser) {
+      if (roles[i] === roleId) {
         validUser = true;
       }
+      i++;
     }
   }
 

@@ -70,7 +70,8 @@ function Presale() {
   };
 
   useEffect(() => {
-    if (presale?.length > 0) { // Corrected from `presales` to `presale`
+    if (presale?.length > 0) {
+      // Corrected from `presales` to `presale`
       calc(presale); // Corrected from `presales` to `presale`
     }
   }, [presale]); // Corrected from `presales` to `presale`
@@ -122,7 +123,9 @@ function Presale() {
           onSaveRow={handleSaveRow}
         />
       </VuiBox>
-      {open && <PresaleForm open={open} onClose={closePresaleForm} setDataUpdated={setDataUpdated} />}
+      {open && (
+        <PresaleForm open={open} onClose={closePresaleForm} setDataUpdated={setDataUpdated} />
+      )}
     </Card>
   );
 }

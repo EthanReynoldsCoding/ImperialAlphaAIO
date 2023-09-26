@@ -76,6 +76,7 @@ export default function Data({ dataUpdated, setDataUpdated }) {
 
   useEffect(() => {
     getPresales();
+    // setDataUpdated(false);
   }, [getPresales, dataUpdated]);
 
   return {

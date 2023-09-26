@@ -107,7 +107,7 @@ function Todo({ color, todo, defaultChecked, noDivider, setDataUpdated }) {
       <VuiBox width="100%" pl={1} ml={2}>
         <VuiBox display="flex" alignItems="top">
           <Checkbox
-            disabled={todo.status}
+            checked={todo.status}
             style={{ backgroundColor: "#fff" }}
             sx={{
               color: info.main,
