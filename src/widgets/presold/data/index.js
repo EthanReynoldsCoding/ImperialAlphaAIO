@@ -15,7 +15,8 @@ import EditForm from "layouts/dashboard/daily/components/Projects/EditForm";
 import { supabase } from "supabaseClient";
 import { useAuth } from "hooks/Auth";
 
-export default function Data({ dataUpdated, setDataUpdated }) { // Destructure props correctly
+export default function Data({ dataUpdated, setDataUpdated }) {
+  // Destructure props correctly
   const [presales, setPresales] = useState([]);
   const [openDeletion, setOpenDeletion] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -75,10 +76,10 @@ export default function Data({ dataUpdated, setDataUpdated }) { // Destructure p
 
   useEffect(() => {
     getPresales();
-    setDataUpdated(false);
   }, [getPresales, dataUpdated]);
 
-  return { // Replace curly braces with parentheses for returning JSX
+  return {
+    // Replace curly braces with parentheses for returning JSX
     columns: [
       { name: "customer", align: "left" },
       { name: "vehicles", align: "left" },
