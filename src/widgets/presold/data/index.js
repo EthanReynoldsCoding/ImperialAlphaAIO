@@ -12,10 +12,14 @@ import avatar3 from "assets/images/avatar3.png";
 import avatar4 from "assets/images/avatar4.png";
 import Deletion from "components/Deletion";
 import EditForm from "layouts/dashboard/daily/components/Projects/EditForm";
+
+import EditSection from "widgets/presold/EditSection";
+import DeleteSection from "widgets/presold/DeleteSection";
+
 import { supabase } from "supabaseClient";
 import { useAuth } from "hooks/Auth";
 
-export default function Data({ dataUpdated, setDataUpdated }) {
+export default function Data(dataUpdated, setDataUpdated) {
   // Destructure props correctly
   const [presales, setPresales] = useState([]);
   const [openDeletion, setOpenDeletion] = useState(false);
@@ -25,16 +29,12 @@ export default function Data({ dataUpdated, setDataUpdated }) {
   const userId = user?.id;
 
   const getPresales = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.from("presales").select().eq("user_id", userId);
+    const { data, error } = await supabase.from("presales").select().eq("user_id", userId);
 
-      if (error) {
-        console.error(error);
-      } else {
-        setPresales(data);
-      }
-    } catch (error) {
+    if (error) {
       console.error(error);
+    } else {
+      setPresales(data);
     }
   }, [userId]);
 
@@ -54,29 +54,9 @@ export default function Data({ dataUpdated, setDataUpdated }) {
     setOpenEdit(false);
   };
 
-  const deletePresales = useCallback(
-    async (id) => {
-      try {
-        const { error } = await supabase.from("presales").delete().eq("id", id);
-
-        if (error) {
-          console.error(error);
-        } else {
-          setOpenDeletion(false);
-          setDataUpdated(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [setDataUpdated]
-  );
-
-  const avatars = [avatar1, avatar2, avatar3, avatar4];
-
   useEffect(() => {
     getPresales();
-    // setDataUpdated(false);
+    setDataUpdated(false);
   }, [getPresales, dataUpdated]);
 
   return {
@@ -86,58 +66,17 @@ export default function Data({ dataUpdated, setDataUpdated }) {
       { name: "vehicles", align: "left" },
       { name: "notes", align: "center" },
       { name: "date", align: "center" },
+      { name: "edit", align: "center" },
       { name: "delete", align: "center" },
     ],
 
-    rows: presales.map((presale) => {
+    rows: presales.map((presale, idx) => {
       return {
-        customers: (
-          <VuiBox display="flex" justifyContent="space-between" py={1}>
-            <>
-              {presale.customer.map((customer, idx) => {
-                let val = idx;
-                while (val > 3) {
-                  val -= 4;
-                }
-
-                return (
-                  <Tooltip key={idx} title={customer} placement="bottom">
-                    <VuiAvatar
-                      src={avatars[val]}
-                      alt="name"
-                      size="xs"
-                      sx={{
-                        border: ({ borders: { borderWidth }, palette: { dark } }) =>
-                          `${borderWidth[2]} solid ${dark.focus}`,
-                        cursor: "pointer",
-                        position: "relative",
-
-                        "&:not(:first-of-type)": {
-                          ml: -1.25,
-                        },
-
-                        "&:hover, &:focus": {
-                          zIndex: "10",
-                        },
-                      }}
-                    />
-                  </Tooltip>
-                );
-              })}
-            </>
-            <IconButton aria-label="edit" size="small" color="success" onClick={handleOpenEdit}>
-              <EditIcon />
-            </IconButton>
-            {openEdit && (
-              <EditForm
-                open={openEdit}
-                onClose={handleCloseEdit}
-                handleCloseEdit={handleCloseEdit}
-                setDataUpdated={setDataUpdated}
-                data={presale.customer}
-                id={presale.id}
-              />
-            )}
+        customer: (
+          <VuiBox display="flex" alignItems="center">
+            <VuiTypography color="white" variant="button" fontWeight="medium">
+              {presale.customer}
+            </VuiTypography>
           </VuiBox>
         ),
         vehicles: (
@@ -157,16 +96,17 @@ export default function Data({ dataUpdated, setDataUpdated }) {
             {presale.date}
           </VuiTypography>
         ),
+        edit: (
+          <>
+            {/* <IconButton aria-label="edit" size="small" color="success" onClick={handleOpenEdit}>
+              <EditIcon />
+            </IconButton> */}
+            <EditSection presale={presale} setDataUpdated={setDataUpdated} />
+          </>
+        ),
         delete: (
           <>
-            <IconButton aria-label="delete" size="small" color="error" onClick={handleOpenDeletion}>
-              <DeleteIcon />
-            </IconButton>
-            <Deletion
-              open={openDeletion}
-              handleClose={handleClose}
-              deletion={() => deletePresales(presale.id)}
-            />
+            <DeleteSection id={presale.id} setDataUpdated={setDataUpdated} />
           </>
         ),
       };

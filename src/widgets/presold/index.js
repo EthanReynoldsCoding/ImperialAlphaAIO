@@ -9,17 +9,14 @@ import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import Table from "examples/Tables/Table";
-import PresaleForm from "widgets/presold"; // Corrected backslash to forward slash
-import Data from "widgets/presold/data/index.js";
+import PresaleForm from "widgets/presold/PresaleForm"; // Corrected backslash to forward slash
+import Data from "widgets/presold/data";
 
 function Presale() {
-  const [editedRows, setEditedRows] = useState([]);
-  const [currentEditRow, setCurrentEditRow] = useState(null);
-  let count = 0;
   const [activePresales, setActivePresales] = useState([]);
 
   const [dataUpdated, setDataUpdated] = useState(false);
-  const { columns, rows, presale } = Data(dataUpdated, setDataUpdated);
+  const { columns, rows, presales } = Data(dataUpdated, setDataUpdated);
 
   const [open, setOpen] = useState(false);
 
@@ -31,36 +28,15 @@ function Presale() {
     setOpen(false);
   };
 
-  function handleEditRow(row) {
-    setCurrentEditRow(row);
-  }
-
-  function handleSaveRow(row) {
-    setEditedRows((prevRows) => {
-      const updatedRows = [...prevRows];
-      const index = updatedRows.findIndex((r) => r === row);
-
-      if (index !== -1) {
-        updatedRows.splice(index, 1, row);
-      } else {
-        updatedRows.push(row);
-      }
-
-      return updatedRows;
-    });
-
-    setCurrentEditRow(null);
-  }
-
   const today = new Date();
   const crntMonth = today.getMonth();
   const crntYear = today.getFullYear();
 
   const calc = (data) => {
     if (data?.length > 0) {
-      const filteredArr = presale.filter((d) => {
-        const presaleMonth = new Date(d.created_at).getMonth();
-        const presaleYear = new Date(d.created_at).getFullYear();
+      const filteredArr = presales.filter((d) => {
+        const presaleMonth = new Date(d.date).getMonth();
+        const presaleYear = new Date(d.date).getFullYear();
 
         return presaleMonth === crntMonth && presaleYear === crntYear;
       });
@@ -70,11 +46,13 @@ function Presale() {
   };
 
   useEffect(() => {
-    if (presale?.length > 0) {
+    if (presales?.length > 0) {
       // Corrected from `presales` to `presale`
-      calc(presale); // Corrected from `presales` to `presale`
+      calc(presales); // Corrected from `presales` to `presale`
     }
-  }, [presale]); // Corrected from `presales` to `presale`
+  }, [presales]); // Corrected from `presales` to `presale`
+
+  console.log(presales, activePresales);
 
   return (
     <Card
@@ -114,14 +92,7 @@ function Presale() {
           },
         }}
       >
-        <Table
-          columns={columns}
-          rows={rows}
-          editedRows={editedRows}
-          currentEditRow={currentEditRow}
-          onEditRow={handleEditRow}
-          onSaveRow={handleSaveRow}
-        />
+        <Table columns={columns} rows={rows} />
       </VuiBox>
       {open && (
         <PresaleForm open={open} onClose={closePresaleForm} setDataUpdated={setDataUpdated} />

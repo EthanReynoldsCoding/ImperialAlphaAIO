@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Avatar from "@mui/material/Avatar";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -32,14 +32,10 @@ import { supabase } from "supabaseClient";
 import { useAuth } from "hooks/Auth";
 
 function PresaleForm(props) {
-  const { onClose, open, edit, setDataUpdated } = props;
+  const { open, onClose, setDataUpdated, edit, presale } = props;
 
   const { user } = useAuth();
-  const { id: userId } = user;
-
-  const handleClose = () => {
-    onClose();
-  };
+  const userId = user?.id;
 
   const initialValues = {
     vehicle: "",
@@ -48,9 +44,10 @@ function PresaleForm(props) {
     date: "",
   };
 
-  const [formValues, setFormValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(edit ? presale : initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [disabled, setDisabled] = useState(edit);
 
   const validate = (values) => {
     const errors = {};
@@ -73,9 +70,11 @@ function PresaleForm(props) {
     if (e.target) {
       const { name, value } = e.target;
       setFormValues({ ...formValues, [name]: value });
-    } else if (e.name) {
-      setFormValues({ ...formValues, [e.name]: e.value });
+    } else {
+      const date = dayjs(e).format("MM/DD/YYYY");
+      setFormValues({ ...formValues, date: date });
     }
+    setDisabled(false);
   };
 
   const handleSubmit = (e) => {
@@ -84,7 +83,7 @@ function PresaleForm(props) {
     setIsSubmit(true);
   };
 
-  const addPresale = async () => {
+  const addPresale = useCallback(async () => {
     const { error } = await supabase.from("presales").insert({
       ...formValues,
       user_id: userId,
@@ -93,23 +92,45 @@ function PresaleForm(props) {
     if (error) {
       console.log(error);
     } else {
-      handleClose();
+      onClose();
       setDataUpdated(true);
     }
-  };
+  }, [formValues, onClose, setDataUpdated, userId]);
+
+  const presaleId = presale?.id;
+
+  const editPresale = useCallback(async () => {
+    delete formValues.id;
+    const { error } = await supabase
+      .from("presales")
+      .update({ ...formValues })
+      .eq("id", presaleId);
+
+    if (error) {
+      console.log(error);
+    } else {
+      onClose();
+      setDataUpdated(true);
+    }
+  }, [formValues, onClose, presaleId, setDataUpdated]);
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      addPresale();
+      if (edit) {
+        editPresale();
+      } else {
+        addPresale();
+      }
     }
-  }, [addPresale, formErrors, isSubmit]);
+  }, [addPresale, edit, editPresale, formErrors, isSubmit]);
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={onClose} open={open}>
       <Grid container className="tables_dialog">
         <VuiBox p={5}>
           <VuiTypography variant="h5" color="white">
-            Add New Presale
+            {edit ? <>Edit </> : <>Add New </>}
+            Presale
           </VuiTypography>
           <Grid item xs={12}>
             <div
@@ -120,7 +141,7 @@ function PresaleForm(props) {
                 cursor: "pointer",
                 zIndex: 1,
               }}
-              onClick={handleClose}
+              onClick={onClose}
             >
               <CloseIcon color="white" />
             </div>
@@ -204,7 +225,7 @@ function PresaleForm(props) {
 
               <VuiBox mt={3} width="100%" display="flex" justifyContent="flex-end">
                 {edit ? (
-                  <VuiButton variant="contained" color="success" type="submit">
+                  <VuiButton variant="contained" color="success" type="submit" disabled={disabled}>
                     <Icon sx={{ fontWeight: "bold" }}>edit</Icon>
                   </VuiButton>
                 ) : (
