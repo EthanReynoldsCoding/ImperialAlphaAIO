@@ -164,7 +164,7 @@
 export const lineChartDataDashboard = [
   {
     name: "New Cars",
-    data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    data: [3, 5, 1, 3, 8, 3, 9, 5, 7, 8, 2, 7],
   },
   {
     name: "Used Cars",
