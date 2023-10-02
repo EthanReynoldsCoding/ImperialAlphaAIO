@@ -46,7 +46,7 @@ function ImperialAI() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
+            'Authorization': imperialaiapi,
           },
         }
       );
