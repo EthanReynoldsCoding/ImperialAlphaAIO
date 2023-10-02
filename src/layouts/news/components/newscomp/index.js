@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NewsComp = () => {
   const classes = useStyles();
-  const apiKey = "b18b25b65a8e481397ba2ebefd7835e6";
+  const apiKey = newsapi;
   const [news, setNews] = useState([]);
   const [breakingNews, setBreakingNews] = useState(null);
   const [category, setCategory] = useState("general");
