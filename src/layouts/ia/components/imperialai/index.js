@@ -46,7 +46,7 @@ function ImperialAI() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': imperialaiapi,
+            'Authorization': process.env.imperialaiapi,
           },
         }
       );
