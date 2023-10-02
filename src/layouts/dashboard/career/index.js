@@ -74,7 +74,7 @@ function CareerDashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Career Cars Sold" }}
                 count="5.5"
                 percentage={{ color: "success", text: "+100%" }}
@@ -82,7 +82,7 @@ function CareerDashboard() {
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Career Commission", fontWeight: "regular" }}
                 count="$1,547"
                 percentage={{ color: "success", text: "+100%" }}
@@ -104,7 +104,6 @@ function CareerDashboard() {
                 percentage={{ color: "success", text: "+100%" }}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
-            
             </Grid>
           </Grid>
         </VuiBox>
@@ -286,7 +285,6 @@ function CareerDashboard() {
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <ToDoListWidget />
-          
           </Grid>
         </Grid>
       </VuiBox>

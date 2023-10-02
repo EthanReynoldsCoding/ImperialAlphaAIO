@@ -46,12 +46,116 @@ import { barChartDataDashboard } from "layouts/dashboard/daily/data/barChartData
 import { barChartOptionsDashboard } from "layouts/dashboard/daily/data/barChartOptions";
 import { salesTableData } from "layouts/dashboard/daily/data/salesTableData";
 
+import { useState } from "react";
+import Chart from "react-apexcharts";
+
 function DailyDashboard() {
   const cardContent = linearGradient(
     colors.gradients.cardContent.main,
     colors.gradients.cardContent.state,
     colors.gradients.cardContent.deg
   );
+
+  const data = {
+    series: [
+      {
+        name: "Inflation",
+        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
+      },
+    ],
+    options: {
+      chart: {
+        height: 220,
+        type: "bar",
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 10,
+          dataLabels: {
+            position: "top", // top, center, bottom
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          return val + "%";
+        },
+        offsetY: -20,
+        style: {
+          fontSize: "12px",
+          colors: ["#fff"],
+        },
+      },
+
+      xaxis: {
+        categories: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        style: {
+          color: "#fff",
+        },
+        position: "top",
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        crosshairs: {
+          fill: {
+            type: "gradient",
+            gradient: {
+              colorFrom: "#D8E3F0",
+              colorTo: "#BED1E6",
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            },
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      yaxis: {
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return val + "%";
+          },
+        },
+      },
+      title: {
+        text: "Monthly Inflation in Argentina, 2002",
+        floating: true,
+        offsetY: 200,
+        align: "center",
+        style: {
+          color: "#fff",
+        },
+      },
+    },
+  };
+
+  const [options, setOptions] = useState(data);
 
   return (
     <DashboardLayout>
@@ -139,13 +243,19 @@ function DailyDashboard() {
                       borderRadius: "20px",
                     }}
                   >
-                    <BarChart
+                    {/* <BarChart
                       barChartData={barChartDataDashboard}
                       barChartOptions={barChartOptionsDashboard}
+                    /> */}
+                    <Chart
+                      options={options.options}
+                      series={options.series}
+                      type="bar"
+                      height={220}
                     />
                   </VuiBox>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
-                    Active Users
+                    Active Analytics
                   </VuiTypography>
                   <VuiBox display="flex" alignItems="center" mb="40px">
                     <VuiTypography variant="button" color="success" fontWeight="bold">

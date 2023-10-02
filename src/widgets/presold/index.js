@@ -52,8 +52,6 @@ function Presale() {
     }
   }, [presales]); // Corrected from `presales` to `presale`
 
-  console.log(presales, activePresales);
-
   return (
     <Card
       sx={{

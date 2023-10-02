@@ -148,23 +148,6 @@ function PresaleForm(props) {
             <form onSubmit={handleSubmit}>
               <Grid item xs={12}>
                 <FormField
-                  label="Vehicle"
-                  type="text"
-                  placeholder="Your Vehicle"
-                  name="vehicle"
-                  value={formValues.vehicle}
-                  onChange={handleChange}
-                  error={formErrors.vehicle && true}
-                />
-                {formErrors.vehicle && (
-                  <Alert severity="error" className="error_alert">
-                    {formErrors.vehicle}
-                  </Alert>
-                )}
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormField
                   type="text"
                   label="Customer"
                   placeholder="Customer Name" // Changed placeholder
@@ -176,6 +159,23 @@ function PresaleForm(props) {
                 {formErrors.customer && (
                   <Alert severity="error" className="error_alert">
                     {formErrors.customer}
+                  </Alert>
+                )}
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormField
+                  label="Vehicle"
+                  type="text"
+                  placeholder="Your Vehicle"
+                  name="vehicle"
+                  value={formValues.vehicle}
+                  onChange={handleChange}
+                  error={formErrors.vehicle && true}
+                />
+                {formErrors.vehicle && (
+                  <Alert severity="error" className="error_alert">
+                    {formErrors.vehicle}
                   </Alert>
                 )}
               </Grid>
