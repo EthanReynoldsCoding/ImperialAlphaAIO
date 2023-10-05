@@ -32,7 +32,7 @@ export const lineChartOptionsDashboard = {
     curve: "smooth",
   },
   xaxis: {
-    type: "datetime",
+    // type: "datetime",
     categories: [
       "Jan",
       "Feb",
