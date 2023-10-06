@@ -45,12 +45,19 @@ import { barChartDataDashboard } from "layouts/dashboard/daily/data/barChartData
 import { barChartOptionsDashboard } from "layouts/dashboard/daily/data/barChartOptions";
 import { salesTableData } from "layouts/dashboard/daily/data/salesTableData";
 
+// Components
+import SoldPerMonth from "layouts/dashboard/daily/components/SoldPerMonth";
+import CommissionPerCar from "layouts/dashboard/daily/components/CommissionPerCar";
+import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
+import TotalSalesPerMonth from "layouts/dashboard/daily/components/TotalSalesPerMonth";
+
 import { useCallback, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { supabase } from "supabaseClient";
 import dayjs from "dayjs";
 
 function DailyDashboard() {
+  const [salesCount, setSalesCount] = useState(0);
   const cardContent = linearGradient(
     colors.gradients.cardContent.main,
     colors.gradients.cardContent.state,
@@ -179,13 +186,22 @@ function DailyDashboard() {
   const [lineChartDataDashboard, setLineChartDataDashboard] = useState(lineChartDataDashboardDemo);
 
   const getSales = useCallback(async () => {
-    const { data, error } = await supabase.from("sales").select("date, condition");
+    const { data, error } = await supabase.from("sales").select();
+
+    const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
+
+    console.log("sum", sum);
+
+    if (!sumError) {
+      setSalesCount(sum);
+    }
 
     if (!error) {
-      const avg = String(data.length / 12);
-      setCarsSold(avg.slice(0, 5));
-
+      const mySet1 = new Set();
       data.map((d) => {
+        const date = dayjs(d.date).format("MM-YYYY");
+        mySet1.add(date);
+
         const condition = d.condition;
         if (condition === "new") {
           const month = Number(d.date.slice(5, 7));
@@ -212,14 +228,21 @@ function DailyDashboard() {
         old["data"] = oldArr;
         setSeries((series) => [...placeholder]);
       });
+
+      const monthsCount = mySet1.size;
+      const avg = String(data.length / monthsCount);
+      setCarsSold(avg.slice(0, 5));
     } else {
       console.log(error);
     }
-  }, []);
+  }, [lineChartDataDashboard, series]);
+
+  const getS = useCallback(async () => {}, []);
 
   useEffect(() => {
     setLoading(true);
     getSales();
+    getS();
     setLoading(false);
   }, []);
 
@@ -311,8 +334,6 @@ function DailyDashboard() {
     },
     colors: ["#0075FF", "#2CD9FF"],
   };
-
-  console.log("series", series);
 
   return (
     <DashboardLayout>
@@ -446,118 +467,13 @@ function DailyDashboard() {
                     </VuiTypography>
                   </VuiBox>
                   <Grid container spacing="50px">
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            borderRadius: "6px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        >
-                          <IoWallet color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Average Sold Cars Per Month
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        {carsSold}
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            borderRadius: "6px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        >
-                          <IoIosRocket color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Clicks
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        2,42M
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            borderRadius: "6px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        >
-                          <FaShoppingCart color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Sales
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        2,400$
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={3}>
-                      <Stack
-                        direction="row"
-                        spacing={{ sm: "10px", xl: "4px", xxl: "10px" }}
-                        mb="6px"
-                      >
-                        <VuiBox
-                          bgColor="info"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          sx={{
-                            borderRadius: "6px",
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        >
-                          <IoBuild color="#fff" size="12px" />
-                        </VuiBox>
-                        <VuiTypography color="text" variant="button" fontWeight="medium">
-                          Items
-                        </VuiTypography>
-                      </Stack>
-                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
-                        320
-                      </VuiTypography>
-                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
-                    </Grid>
+                    <SoldPerMonth salesCount={salesCount} />
+
+                    <CommissionPerCar />
+
+                    <ProfitPerCar />
+
+                    <TotalSalesPerMonth />
                   </Grid>
                 </VuiBox>
               </Card>
