@@ -29,9 +29,14 @@ import VuiAvatar from "components/VuiAvatar";
 
 // Images
 import burceMars from "assets/images/avatar-simmmple.png";
+import { useAuth } from "hooks/Auth";
 
 function Header() {
   const [visible, setVisible] = useState(true);
+
+  const { user } = useAuth();
+
+  console.log(user);
 
   const handleSetVisible = () => setVisible(!visible);
 
@@ -41,7 +46,7 @@ function Header() {
         <Grid container spacing={3} alignItems="center">
           <Grid item>
             <VuiAvatar
-              src={burceMars}
+              src={user?.user_metadata.avatar_url}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -51,10 +56,10 @@ function Header() {
           <Grid item>
             <VuiBox height="100%" display="flex" flexDirection="column" mt={0.5} lineHeight={1}>
               <VuiTypography variant="lg" color="white" fontWeight="bold">
-                Mark Johnson
+                {user?.user_metadata.full_name}
               </VuiTypography>
               <VuiTypography variant="button" color="text" fontWeight="regular">
-                mark@simmmple.com
+                {user?.email}
               </VuiTypography>
             </VuiBox>
           </Grid>

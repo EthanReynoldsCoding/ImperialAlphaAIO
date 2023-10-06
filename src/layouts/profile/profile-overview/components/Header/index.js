@@ -12,11 +12,15 @@ import { IoBuild } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { useAuth } from "hooks/Auth";
 
 function Header() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
+
+  const { user } = useAuth();
+  console.log("user", user);
 
   const location = useLocation();
 
@@ -107,7 +111,7 @@ function Header() {
             })}
           >
             <VuiAvatar
-              src="https://cdn.discordapp.com/attachments/1116531444626497678/1134951698968887296/Imperial_Inspiration_Inverted_Logo.png"
+              src={user.user_metadata.picture}
               alt="profile-image"
               variant="rounded"
               size="xl"
@@ -129,10 +133,10 @@ function Header() {
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
-                Ethan Reynolds
+                {user.user_metadata.full_name}
               </VuiTypography>
               <VuiTypography variant="button" color="text" fontWeight="regular">
-                e.reynolds363@gmail.com
+                {user.email}
               </VuiTypography>
             </VuiBox>
           </Grid>

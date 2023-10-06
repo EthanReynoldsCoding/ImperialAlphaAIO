@@ -57,6 +57,8 @@ function DailyDashboard() {
     colors.gradients.cardContent.deg
   );
 
+  const [loading, setLoading] = useState(true);
+
   const today = new Date();
   const crntYear = dayjs(today).format("YYYY");
 
@@ -174,16 +176,10 @@ function DailyDashboard() {
     },
   ];
 
-  const [lineChartDataDashboard, setLineChartDataDashboard] = useState(
-    lineChartDataDashboardDemo
-  );
+  const [lineChartDataDashboard, setLineChartDataDashboard] = useState(lineChartDataDashboardDemo);
 
   const getSales = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("sales")
-      .select("date, condition");
-
-    console.log("data", data);
+    const { data, error } = await supabase.from("sales").select("date, condition");
 
     if (!error) {
       const avg = String(data.length / 12);
@@ -198,9 +194,7 @@ function DailyDashboard() {
           const placeholder = lineChartDataDashboard;
           const old = placeholder[0];
           old["data"] = oldArr;
-          setLineChartDataDashboard((lineChartDataDashboard) => [
-            ...placeholder,
-          ]);
+          setLineChartDataDashboard((lineChartDataDashboard) => [...placeholder]);
         } else {
           const month = Number(d.date.slice(5, 7));
           const oldArr = lineChartDataDashboard[1].data;
@@ -208,9 +202,7 @@ function DailyDashboard() {
           const placeholder = lineChartDataDashboard;
           const old = placeholder[1];
           old["data"] = oldArr;
-          setLineChartDataDashboard((lineChartDataDashboard) => [
-            ...placeholder,
-          ]);
+          setLineChartDataDashboard((lineChartDataDashboard) => [...placeholder]);
         }
         const month = Number(d.date.slice(5, 7));
         const oldArr = series[0].data;
@@ -226,10 +218,10 @@ function DailyDashboard() {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     getSales();
+    setLoading(false);
   }, []);
-
-  console.log("lineChartDataDashboard", lineChartDataDashboard);
 
   const lineSeries = [
     {
@@ -320,6 +312,8 @@ function DailyDashboard() {
     colors: ["#0075FF", "#2CD9FF"],
   };
 
+  console.log("series", series);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -387,26 +381,13 @@ function DailyDashboard() {
             <Grid item xs={12} lg={6} xl={7}>
               <Card>
                 <VuiBox sx={{ height: "100%" }}>
-                  <VuiTypography
-                    variant="lg"
-                    color="white"
-                    fontWeight="bold"
-                    mb="5px"
-                  >
+                  <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Sales Overview
                   </VuiTypography>
                   <VuiBox display="flex" alignItems="center" mb="40px">
-                    <VuiTypography
-                      variant="button"
-                      color="success"
-                      fontWeight="bold"
-                    >
+                    <VuiTypography variant="button" color="success" fontWeight="bold">
                       +5% more{" "}
-                      <VuiTypography
-                        variant="button"
-                        color="text"
-                        fontWeight="regular"
-                      >
+                      <VuiTypography variant="button" color="text" fontWeight="regular">
                         in ${crntYear}
                       </VuiTypography>
                     </VuiTypography>
@@ -449,33 +430,17 @@ function DailyDashboard() {
                       barChartData={barChartDataDashboard}
                       barChartOptions={barChartOptionsDashboard}
                     /> */}
-                    <Chart
-                      options={options}
-                      series={series}
-                      type="bar"
-                      height={220}
-                    />
+                    {!loading && (
+                      <Chart options={options} series={series} type="bar" height={220} />
+                    )}
                   </VuiBox>
-                  <VuiTypography
-                    variant="lg"
-                    color="white"
-                    fontWeight="bold"
-                    mb="5px"
-                  >
+                  <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Active Analytics
                   </VuiTypography>
                   <VuiBox display="flex" alignItems="center" mb="40px">
-                    <VuiTypography
-                      variant="button"
-                      color="success"
-                      fontWeight="bold"
-                    >
+                    <VuiTypography variant="button" color="success" fontWeight="bold">
                       (+23){" "}
-                      <VuiTypography
-                        variant="button"
-                        color="text"
-                        fontWeight="regular"
-                      >
+                      <VuiTypography variant="button" color="text" fontWeight="regular">
                         than last week
                       </VuiTypography>
                     </VuiTypography>
@@ -500,27 +465,14 @@ function DailyDashboard() {
                         >
                           <IoWallet color="#fff" size="12px" />
                         </VuiBox>
-                        <VuiTypography
-                          color="text"
-                          variant="button"
-                          fontWeight="medium"
-                        >
+                        <VuiTypography color="text" variant="button" fontWeight="medium">
                           Average Sold Cars Per Month
                         </VuiTypography>
                       </Stack>
-                      <VuiTypography
-                        color="white"
-                        variant="lg"
-                        fontWeight="bold"
-                        mb="8px"
-                      >
+                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
                         {carsSold}
                       </VuiTypography>
-                      <VuiProgress
-                        value={60}
-                        color="info"
-                        sx={{ background: "#2D2E5F" }}
-                      />
+                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
                     </Grid>
                     <Grid item xs={6} md={3} lg={3}>
                       <Stack
@@ -541,27 +493,14 @@ function DailyDashboard() {
                         >
                           <IoIosRocket color="#fff" size="12px" />
                         </VuiBox>
-                        <VuiTypography
-                          color="text"
-                          variant="button"
-                          fontWeight="medium"
-                        >
+                        <VuiTypography color="text" variant="button" fontWeight="medium">
                           Clicks
                         </VuiTypography>
                       </Stack>
-                      <VuiTypography
-                        color="white"
-                        variant="lg"
-                        fontWeight="bold"
-                        mb="8px"
-                      >
+                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
                         2,42M
                       </VuiTypography>
-                      <VuiProgress
-                        value={60}
-                        color="info"
-                        sx={{ background: "#2D2E5F" }}
-                      />
+                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
                     </Grid>
                     <Grid item xs={6} md={3} lg={3}>
                       <Stack
@@ -582,27 +521,14 @@ function DailyDashboard() {
                         >
                           <FaShoppingCart color="#fff" size="12px" />
                         </VuiBox>
-                        <VuiTypography
-                          color="text"
-                          variant="button"
-                          fontWeight="medium"
-                        >
+                        <VuiTypography color="text" variant="button" fontWeight="medium">
                           Sales
                         </VuiTypography>
                       </Stack>
-                      <VuiTypography
-                        color="white"
-                        variant="lg"
-                        fontWeight="bold"
-                        mb="8px"
-                      >
+                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
                         2,400$
                       </VuiTypography>
-                      <VuiProgress
-                        value={60}
-                        color="info"
-                        sx={{ background: "#2D2E5F" }}
-                      />
+                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
                     </Grid>
                     <Grid item xs={6} md={3} lg={3}>
                       <Stack
@@ -623,27 +549,14 @@ function DailyDashboard() {
                         >
                           <IoBuild color="#fff" size="12px" />
                         </VuiBox>
-                        <VuiTypography
-                          color="text"
-                          variant="button"
-                          fontWeight="medium"
-                        >
+                        <VuiTypography color="text" variant="button" fontWeight="medium">
                           Items
                         </VuiTypography>
                       </Stack>
-                      <VuiTypography
-                        color="white"
-                        variant="lg"
-                        fontWeight="bold"
-                        mb="8px"
-                      >
+                      <VuiTypography color="white" variant="lg" fontWeight="bold" mb="8px">
                         320
                       </VuiTypography>
-                      <VuiProgress
-                        value={60}
-                        color="info"
-                        sx={{ background: "#2D2E5F" }}
-                      />
+                      <VuiProgress value={60} color="info" sx={{ background: "#2D2E5F" }} />
                     </Grid>
                   </Grid>
                 </VuiBox>
@@ -663,13 +576,7 @@ function DailyDashboard() {
             <Presale />
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-        >
+        <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
             <Projects />
           </Grid>

@@ -36,7 +36,7 @@ const checkIfValidUser = async (token) => {
     const { roles } = await rolesRes.json();
     const roleId = process.env.REACT_APP_DISCORD_ROLE_ID;
 
-    const rolesLength = roles.length;
+    const rolesLength = roles?.length;
 
     let i = 0;
     while (i < rolesLength && !validUser) {
