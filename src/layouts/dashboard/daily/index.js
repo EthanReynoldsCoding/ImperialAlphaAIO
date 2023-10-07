@@ -399,7 +399,7 @@ function DailyDashboard() {
         </VuiBox>
         <VuiBox mb={3}>
           <Grid container spacing={3}>
-            <Grid item xs={12} lg={6} xl={7}>
+            <Grid item xs={12} lg={6} xl={6}>
               <Card>
                 <VuiBox sx={{ height: "100%" }}>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
@@ -436,7 +436,7 @@ function DailyDashboard() {
                 </VuiBox>
               </Card>
             </Grid>
-            <Grid item xs={12} lg={6} xl={5}>
+            <Grid item xs={12} lg={6} xl={6}>
               <Card>
                 <VuiBox>
                   <VuiBox

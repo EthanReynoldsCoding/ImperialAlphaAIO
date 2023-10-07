@@ -12,15 +12,11 @@ function SoldPerMonth({ salesCount }) {
   const [result, setResult] = useState(0);
 
   const getResult = useCallback(async () => {
-    const { data: minDate, error } = await supabase.rpc("min_date_from_sales");
-
+    const { data, error } = await supabase.rpc("sold_per_month");
+    const res = String(data).slice(0, 4);
+    console.log("SD", res);
     if (!error) {
-      const { data: maxDate, error } = await supabase.rpc("max_date_from_sales");
-      if (!error) {
-        const diff = dayjs(maxDate).diff(minDate, "month");
-
-        setResult(salesCount / diff);
-      }
+      setResult(res);
     }
   }, [salesCount]);
 
@@ -29,7 +25,13 @@ function SoldPerMonth({ salesCount }) {
   }, [getResult]);
 
   return (
-    <Grid item xs={6} md={3} lg={3}>
+    <Grid
+      item
+      xs={6}
+      md={3}
+      lg={3}
+      style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+    >
       <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }} mb="6px">
         <VuiBox
           bgColor="info"

@@ -22,7 +22,13 @@ function ProfitPerCar() {
   }, [getResult]);
 
   return (
-    <Grid item xs={6} md={3} lg={3}>
+    <Grid
+      item
+      xs={6}
+      md={3}
+      lg={3}
+      style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+    >
       <Stack direction="row" spacing={{ sm: "10px", xl: "4px", xxl: "10px" }} mb="6px">
         <VuiBox
           bgColor="info"
