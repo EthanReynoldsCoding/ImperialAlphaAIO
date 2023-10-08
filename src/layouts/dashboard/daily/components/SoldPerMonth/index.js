@@ -14,7 +14,6 @@ function SoldPerMonth({ salesCount }) {
   const getResult = useCallback(async () => {
     const { data, error } = await supabase.rpc("sold_per_month");
     const res = String(data).slice(0, 4);
-    console.log("SD", res);
     if (!error) {
       setResult(res);
     }

@@ -50,11 +50,11 @@ import SoldPerMonth from "layouts/dashboard/daily/components/SoldPerMonth";
 import CommissionPerCar from "layouts/dashboard/daily/components/CommissionPerCar";
 import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
 import TotalSalesPerMonth from "layouts/dashboard/daily/components/TotalSalesPerMonth";
+import SalesOverView from "layouts/dashboard/daily/components/SalesOverView";
+import MonthlySoldChart from "layouts/dashboard/daily/components/MonthlySoldChart";
 
 import { useCallback, useEffect, useState } from "react";
-import Chart from "react-apexcharts";
 import { supabase } from "supabaseClient";
-import dayjs from "dayjs";
 
 function DailyDashboard() {
   const [salesCount, setSalesCount] = useState(0);
@@ -64,276 +64,17 @@ function DailyDashboard() {
     colors.gradients.cardContent.deg
   );
 
-  const [loading, setLoading] = useState(true);
-
-  const today = new Date();
-  const crntYear = dayjs(today).format("YYYY");
-
-  const options = {
-    chart: {
-      height: 220,
-      type: "bar",
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 10,
-        dataLabels: {
-          position: "top", // top, center, bottom
-        },
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return val;
-      },
-      offsetY: -20,
-      style: {
-        fontSize: "12px",
-        colors: ["#fff"],
-      },
-    },
-
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      labels: {
-        style: {
-          colors: "#fff",
-        },
-      },
-      position: "top",
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      crosshairs: {
-        fill: {
-          type: "gradient",
-          gradient: {
-            colorFrom: "#D8E3F0",
-            colorTo: "#BED1E6",
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5,
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        formatter: function (val) {
-          return val;
-        },
-      },
-    },
-    title: {
-      text: `Monthly Sold cars, ${crntYear}`,
-      floating: true,
-      offsetY: 200,
-      align: "center",
-      style: {
-        color: "#fff",
-      },
-    },
-  };
-
-  const seriesDemo = [
-    {
-      name: "Cars Sold",
-      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
-  ];
-
-  const [series, setSeries] = useState(seriesDemo);
-  const [carsSold, setCarsSold] = useState(0);
-
-  const lineChartDataDashboardDemo = [
-    {
-      name: "New Cars",
-      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
-    {
-      name: "Used Cars",
-      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    },
-  ];
-
-  const [lineChartDataDashboard, setLineChartDataDashboard] = useState(lineChartDataDashboardDemo);
-
   const getSales = useCallback(async () => {
-    const { data, error } = await supabase.from("sales").select();
-
     const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
-
-    console.log("sum", sum);
 
     if (!sumError) {
       setSalesCount(sum);
     }
-
-    if (!error) {
-      const mySet1 = new Set();
-      data.map((d) => {
-        const date = dayjs(d.date).format("MM-YYYY");
-        mySet1.add(date);
-
-        const condition = d.condition;
-        if (condition === "new") {
-          const month = Number(d.date.slice(5, 7));
-          const oldArr = lineChartDataDashboard[0].data;
-          oldArr[month - 1] += 1;
-          const placeholder = lineChartDataDashboard;
-          const old = placeholder[0];
-          old["data"] = oldArr;
-          setLineChartDataDashboard((lineChartDataDashboard) => [...placeholder]);
-        } else {
-          const month = Number(d.date.slice(5, 7));
-          const oldArr = lineChartDataDashboard[1].data;
-          oldArr[month - 1] += 1;
-          const placeholder = lineChartDataDashboard;
-          const old = placeholder[1];
-          old["data"] = oldArr;
-          setLineChartDataDashboard((lineChartDataDashboard) => [...placeholder]);
-        }
-        const month = Number(d.date.slice(5, 7));
-        const oldArr = series[0].data;
-        oldArr[month - 1] += 1;
-        const placeholder = series;
-        const old = placeholder[0];
-        old["data"] = oldArr;
-        setSeries((series) => [...placeholder]);
-      });
-
-      const monthsCount = mySet1.size;
-      const avg = String(data.length / monthsCount);
-      setCarsSold(avg.slice(0, 5));
-    } else {
-      console.log(error);
-    }
-  }, [lineChartDataDashboard, series]);
-
-  const getS = useCallback(async () => {}, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getSales();
-    getS();
-    setLoading(false);
   }, []);
 
-  const lineSeries = [
-    {
-      name: "New Cars",
-      data: [0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 8, 0],
-    },
-    {
-      name: "Used Cars",
-      data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    },
-  ];
-
-  const lineOptions = {
-    chart: {
-      height: 350,
-      type: "area",
-      toolbar: {
-        show: false,
-      },
-    },
-    tooltip: {
-      theme: "dark",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
-    xaxis: {
-      // type: "datetime",
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      labels: {
-        style: {
-          colors: "#c8cfca",
-          fontSize: "10px",
-        },
-      },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: "#c8cfca",
-          fontSize: "10px",
-        },
-      },
-    },
-    legend: {
-      show: false,
-    },
-    grid: {
-      strokeDashArray: 5,
-      borderColor: "#56577A",
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shade: "dark",
-        type: "vertical",
-        shadeIntensity: 0,
-        gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-        inverseColors: true,
-        opacityFrom: 0.8,
-        opacityTo: 0,
-        stops: [],
-      },
-      colors: ["#0075FF", "#2CD9FF"],
-    },
-    colors: ["#0075FF", "#2CD9FF"],
-  };
+  useEffect(() => {
+    getSales();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -400,40 +141,8 @@ function DailyDashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6} xl={6}>
-              <Card>
-                <VuiBox sx={{ height: "100%" }}>
-                  <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
-                    Sales Overview
-                  </VuiTypography>
-                  <VuiBox display="flex" alignItems="center" mb="40px">
-                    <VuiTypography variant="button" color="success" fontWeight="bold">
-                      +5% more{" "}
-                      <VuiTypography variant="button" color="text" fontWeight="regular">
-                        in ${crntYear}
-                      </VuiTypography>
-                    </VuiTypography>
-                  </VuiBox>
-                  <VuiBox sx={{ height: "310px" }}>
-                    {/* <LineChart
-                      lineChartData={lineChartDataDashboard}
-                      lineChartOptions={lineChartOptionsDashboard}
-                    /> */}
-                    {/* <Chart
-                      options={lineChartOptionsDashboard}
-                      series={lineChartDataDashboard}
-                      type="area"
-                      width="100%"
-                      height="100%"
-                    /> */}
-                    <Chart
-                      options={lineOptions}
-                      series={lineChartDataDashboard}
-                      type="area"
-                      width="100%"
-                      height="100%"
-                    />
-                  </VuiBox>
-                </VuiBox>
+              <Card style={{ height: "100%" }}>
+                <SalesOverView />
               </Card>
             </Grid>
             <Grid item xs={12} lg={6} xl={6}>
@@ -447,13 +156,7 @@ function DailyDashboard() {
                       borderRadius: "20px",
                     }}
                   >
-                    {/* <BarChart
-                      barChartData={barChartDataDashboard}
-                      barChartOptions={barChartOptionsDashboard}
-                    /> */}
-                    {!loading && (
-                      <Chart options={options} series={series} type="bar" height={220} />
-                    )}
+                    <MonthlySoldChart />
                   </VuiBox>
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Active Analytics
@@ -468,11 +171,8 @@ function DailyDashboard() {
                   </VuiBox>
                   <Grid container spacing="50px">
                     <SoldPerMonth salesCount={salesCount} />
-
                     <CommissionPerCar />
-
                     <ProfitPerCar />
-
                     <TotalSalesPerMonth />
                   </Grid>
                 </VuiBox>
@@ -510,64 +210,3 @@ function DailyDashboard() {
 }
 
 export default DailyDashboard;
-
-// options: {
-//   chart: {
-//     height: 350,
-//     type: 'line',
-//     dropShadow: {
-//       enabled: true,
-//       color: '#000',
-//       top: 18,
-//       left: 7,
-//       blur: 10,
-//       opacity: 0.2
-//     },
-//     toolbar: {
-//       show: false
-//     }
-//   },
-//   colors: ['#77B6EA', '#545454'],
-//   dataLabels: {
-//     enabled: true,
-//   },
-//   stroke: {
-//     curve: 'smooth'
-//   },
-//   title: {
-//     text: 'Average High & Low Temperature',
-//     align: 'left'
-//   },
-//   grid: {
-//     borderColor: '#e7e7e7',
-//     row: {
-//       colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-//       opacity: 0.5
-//     },
-//   },
-//   markers: {
-//     size: 1
-//   },
-//   xaxis: {
-//     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-//     title: {
-//       text: 'Month'
-//     }
-//   },
-//   yaxis: {
-//     title: {
-//       text: 'Temperature'
-//     },
-//     min: 5,
-//     max: 40
-//   },
-//   legend: {
-//     position: 'top',
-//     horizontalAlign: 'right',
-//     floating: true,
-//     offsetY: -25,
-//     offsetX: -5
-//   }
-// },
-
-// };
