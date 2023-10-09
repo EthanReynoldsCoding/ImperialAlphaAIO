@@ -12,7 +12,7 @@ function SalesOverView() {
 
   const options = {
     chart: {
-      height: 340,
+      height: 315,
       type: "area",
       toolbar: {
         show: false,
@@ -148,7 +148,7 @@ function SalesOverView() {
         </VuiTypography>
       </VuiBox>
       <VuiBox>
-        <Chart options={options} series={lineChartDataDashboard} type="area" height={340} />
+        <Chart options={options} series={lineChartDataDashboard} type="area" height={315} />
       </VuiBox>
     </VuiBox>
   );
