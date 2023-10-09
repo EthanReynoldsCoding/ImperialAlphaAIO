@@ -4,8 +4,12 @@ import VuiTypography from "components/VuiTypography";
 import Chart from "react-apexcharts";
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "supabaseClient";
+import dayjs from "dayjs";
 
 function SalesOverView() {
+  const today = new Date();
+  const crntYear = dayjs(today).format("YYYY");
+
   const options = {
     chart: {
       height: 340,
@@ -136,12 +140,12 @@ function SalesOverView() {
         Sales Overview
       </VuiTypography>
       <VuiBox display="flex" alignItems="center" mb="40px">
-        {/* <VuiTypography variant="button" color="success" fontWeight="bold">
+        <VuiTypography variant="button" color="success" fontWeight="bold">
           +5% more{" "}
           <VuiTypography variant="button" color="text" fontWeight="regular">
             in {crntYear}
           </VuiTypography>
-        </VuiTypography> */}
+        </VuiTypography>
       </VuiBox>
       <VuiBox>
         <Chart options={options} series={lineChartDataDashboard} type="area" height={340} />

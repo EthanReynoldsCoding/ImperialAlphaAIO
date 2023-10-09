@@ -148,16 +148,7 @@ function DailyDashboard() {
             <Grid item xs={12} lg={6} xl={6}>
               <Card>
                 <VuiBox>
-                  <VuiBox
-                    mb="24px"
-                    height="220px"
-                    sx={{
-                      background: cardContent,
-                      borderRadius: "20px",
-                    }}
-                  >
-                    <MonthlySoldChart />
-                  </VuiBox>
+                  <MonthlySoldChart cardContent={cardContent} />
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Active Analytics
                   </VuiTypography>
