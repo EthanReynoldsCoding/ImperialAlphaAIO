@@ -3,27 +3,32 @@ import { useCallback, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { supabase } from "supabaseClient";
 
-function MonthlySoldChart({ cardContent }) {
+function MonthlySoldChart({ cardContent, crntYear }) {
   const options = {
     chart: {
-      type: "bar",
       height: 220,
+      type: "bar",
     },
     plotOptions: {
       bar: {
-        horizontal: false,
-        columnWidth: "55%",
-        endingShape: "rounded",
+        borderRadius: 10,
+        dataLabels: {
+          position: "top", // top, center, bottom
+        },
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
+      formatter: function (val) {
+        return val;
+      },
+      offsetY: -20,
+      style: {
+        fontSize: "12px",
+        colors: ["#fff"],
+      },
     },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["transparent"],
-    },
+
     xaxis: {
       categories: [
         "Jan",
@@ -40,28 +45,56 @@ function MonthlySoldChart({ cardContent }) {
         "Dec",
       ],
       labels: {
+        offsetY: -3,
         style: {
-          colors: "#c8cfca",
+          colors: "#fff",
           fontSize: "10px",
         },
+      },
+      position: "top",
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      crosshairs: {
+        fill: {
+          type: "gradient",
+          gradient: {
+            colorFrom: "#D8E3F0",
+            colorTo: "#BED1E6",
+            stops: [0, 100],
+            opacityFrom: 0.4,
+            opacityTo: 0.5,
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
       },
     },
     yaxis: {
-      labels: {
-        style: {
-          colors: "#c8cfca",
-          fontSize: "10px",
-        },
+      axisBorder: {
+        show: false,
       },
-    },
-    fill: {
-      opacity: 1,
-    },
-    tooltip: {
-      y: {
+      axisTicks: {
+        show: false,
+      },
+      labels: {
+        show: false,
         formatter: function (val) {
           return val;
         },
+      },
+    },
+    title: {
+      text: `Monthly Sold Cars, ${crntYear}`,
+      floating: true,
+      offsetY: 220,
+      align: "center",
+      style: {
+        color: "#fff",
       },
     },
   };

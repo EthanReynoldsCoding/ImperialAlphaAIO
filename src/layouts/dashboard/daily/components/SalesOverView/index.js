@@ -4,12 +4,8 @@ import VuiTypography from "components/VuiTypography";
 import Chart from "react-apexcharts";
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "supabaseClient";
-import dayjs from "dayjs";
 
-function SalesOverView() {
-  const today = new Date();
-  const crntYear = dayjs(today).format("YYYY");
-
+function SalesOverView({ crntYear }) {
   const options = {
     chart: {
       height: 315,
@@ -107,10 +103,11 @@ function SalesOverView() {
     if (!error) {
       data.map((d) => {
         const condition = d.condition;
+        const count = Number(d.count);
         if (condition === "new" || condition === "ctp") {
           const month = Number(d.date.slice(5, 7));
           const oldArr = lineChartDataDashboard[0].data;
-          oldArr[month - 1] += 1;
+          oldArr[month - 1] += count;
           const placeholder = lineChartDataDashboard;
           const old = placeholder[0];
           old["data"] = oldArr;
@@ -118,7 +115,7 @@ function SalesOverView() {
         } else if (condition === "used" || condition === "cpo") {
           const month = Number(d.date.slice(5, 7));
           const oldArr = lineChartDataDashboard[1].data;
-          oldArr[month - 1] += 1;
+          oldArr[month - 1] += count;
           const placeholder = lineChartDataDashboard;
           const old = placeholder[1];
           old["data"] = oldArr;

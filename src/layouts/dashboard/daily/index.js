@@ -55,6 +55,7 @@ import MonthlySoldChart from "layouts/dashboard/daily/components/MonthlySoldChar
 
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "supabaseClient";
+import dayjs from "dayjs";
 
 function DailyDashboard() {
   const [salesCount, setSalesCount] = useState(0);
@@ -63,6 +64,9 @@ function DailyDashboard() {
     colors.gradients.cardContent.state,
     colors.gradients.cardContent.deg
   );
+
+  const today = new Date();
+  const crntYear = dayjs(today).format("YYYY");
 
   const getSales = useCallback(async () => {
     const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
@@ -142,13 +146,13 @@ function DailyDashboard() {
           <Grid container spacing={2}>
             <Grid item xs={12} lg={6} xl={6}>
               <Card style={{ height: "100%" }}>
-                <SalesOverView />
+                <SalesOverView crntYear={crntYear} />
               </Card>
             </Grid>
             <Grid item xs={12} lg={6} xl={6}>
               <Card>
                 <VuiBox>
-                  <MonthlySoldChart cardContent={cardContent} />
+                  <MonthlySoldChart cardContent={cardContent} crntYear={crntYear} />
                   <VuiTypography variant="lg" color="white" fontWeight="bold" mb="5px">
                     Active Analytics
                   </VuiTypography>
