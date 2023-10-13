@@ -59,6 +59,11 @@ import dayjs from "dayjs";
 
 function DailyDashboard() {
   const [salesCount, setSalesCount] = useState(0);
+  const [dailyCars, setDailyCars] = useState(0);
+  const [dailyCommission, setDailyCommission] = useState(0);
+  const [dailyProfit, setDailyProfit] = useState(0);
+  const [dailySales, setDailySales] = useState(0);
+
   const cardContent = linearGradient(
     colors.gradients.cardContent.main,
     colors.gradients.cardContent.state,
@@ -76,9 +81,41 @@ function DailyDashboard() {
     }
   }, []);
 
+  const getDailyCarsSold = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_cars_sold");
+    if (!error) {
+      setDailyCars(data);
+    }
+  }, []);
+
+  const getDailyCommission = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_commission");
+    if (!error) {
+      setDailyCommission(data);
+    }
+  }, []);
+
+  const getDailyProfit = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_profit");
+    if (!error) {
+      setDailyProfit(data);
+    }
+  }, []);
+
+  const getDailySales = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_sales");
+    if (!error) {
+      setDailySales(data);
+    }
+  }, []);
+
   useEffect(() => {
     getSales();
-  }, []);
+    getDailyCarsSold();
+    getDailyCommission();
+    getDailyProfit();
+    getDailySales();
+  }, [getDailyCarsSold, getDailyCommission, getDailyProfit, getDailySales, getSales]);
 
   return (
     <DashboardLayout>
@@ -90,7 +127,7 @@ function DailyDashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Daily Cars Sold" }}
-                count="0"
+                count={dailyCars}
                 icon={{
                   color: "info",
                   component: <IoGlobe size="22px" color="white" />,
@@ -100,7 +137,7 @@ function DailyDashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Daily Commission", fontWeight: "regular" }}
-                count="$0"
+                count={dailyCommission}
                 icon={{
                   color: "info",
                   component: <IoWallet size="22px" color="white" />,
@@ -110,7 +147,7 @@ function DailyDashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Daily Gross Profit" }}
-                count="+0"
+                count={dailyProfit}
                 icon={{
                   color: "info",
                   component: <IoDocumentText size="22px" color="white" />,
@@ -120,7 +157,7 @@ function DailyDashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Total Daily Sales" }}
-                count="$0"
+                count={dailySales}
                 icon={{
                   color: "info",
                   component: <FaShoppingCart size="20px" color="white" />,

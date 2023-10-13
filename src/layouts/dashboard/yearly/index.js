@@ -61,10 +61,52 @@ import { lineChartDataDashboard } from "layouts/dashboard/yearly/data/lineChartD
 import { lineChartOptionsDashboard } from "layouts/dashboard/yearly/data/lineChartOptions";
 import { barChartDataDashboard } from "layouts/dashboard/yearly/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/yearly/data/barChartOptions";
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "supabaseClient";
 
 function YearlyDashboard() {
+  const [yearlyCars, setYearlyCars] = useState(0);
+  const [yearlyCommission, setYearlyCommission] = useState(0);
+  const [yearlyProfit, setYearlyProfit] = useState(0);
+  const [yearlySales, setYearlySales] = useState(0);
+
   const { gradients } = colors;
   const { cardContent } = gradients;
+
+  const getYearlyCarsSold = useCallback(async () => {
+    const { data, error } = await supabase.rpc("yearly_cars_sold");
+    if (!error) {
+      setYearlyCars(data);
+    }
+  }, []);
+
+  const getYearlyCommission = useCallback(async () => {
+    const { data, error } = await supabase.rpc("yearly_commission");
+    if (!error) {
+      setYearlyCommission(data);
+    }
+  }, []);
+
+  const getYearlyProfit = useCallback(async () => {
+    const { data, error } = await supabase.rpc("yearly_profit");
+    if (!error) {
+      setYearlyProfit(data);
+    }
+  }, []);
+
+  const getYearlySales = useCallback(async () => {
+    const { data, error } = await supabase.rpc("yearly_sales");
+    if (!error) {
+      setYearlySales(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    getYearlyCarsSold();
+    getYearlyCommission();
+    getYearlyProfit();
+    getYearlySales();
+  }, [getYearlyCarsSold, getYearlyCommission, getYearlyProfit, getYearlySales]);
 
   return (
     <DashboardLayout>
@@ -74,34 +116,31 @@ function YearlyDashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Yearly Cars Sold" }}
-                count="5.5"
-                percentage={{ color: "success", text: "+100%" }}
+                count={yearlyCars}
+                // percentage={{ color: "success", text: "+100%" }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Yearly Commission", fontWeight: "regular" }}
-                count="$1,547"
-                percentage={{ color: "success", text: "+100%" }}
+                count={yearlyCommission}
                 icon={{ color: "info", component: <IoWallet size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Yearly Gross Profit" }}
-                count="+18,498"
-                percentage={{ color: "success", text: "++100%" }}
+                count={yearlyProfit}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Total Yearly Sales" }}
-                count="$322,017"
-                percentage={{ color: "success", text: "+100%%" }}
+                count={yearlySales}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>
@@ -281,11 +320,10 @@ function YearlyDashboard() {
         </VuiBox>
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
-          <Projects />
+            <Projects />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <ToDoListWidget />
-          
           </Grid>
         </Grid>
       </VuiBox>

@@ -61,10 +61,52 @@ import { lineChartDataDashboard } from "layouts/dashboard/monthly/data/lineChart
 import { lineChartOptionsDashboard } from "layouts/dashboard/monthly/data/lineChartOptions";
 import { barChartDataDashboard } from "layouts/dashboard/monthly/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/monthly/data/barChartOptions";
+import { useState, useCallback, useEffect } from "react";
+import { supabase } from "supabaseClient";
 
 function MonthlyDashboard() {
+  const [monthlyCars, setMonthlyCars] = useState(0);
+  const [monthlyCommission, setMonthlyCommission] = useState(0);
+  const [monthlyProfit, setMonthlyProfit] = useState(0);
+  const [monthlySales, setMonthlySales] = useState(0);
+
   const { gradients } = colors;
   const { cardContent } = gradients;
+
+  const getMonthlyCarsSold = useCallback(async () => {
+    const { data, error } = await supabase.rpc("monthly_cars_sold");
+    if (!error) {
+      setMonthlyCars(data);
+    }
+  }, []);
+
+  const getMonthlyCommission = useCallback(async () => {
+    const { data, error } = await supabase.rpc("monthly_commission");
+    if (!error) {
+      setMonthlyCommission(data);
+    }
+  }, []);
+
+  const getMonthlyProfit = useCallback(async () => {
+    const { data, error } = await supabase.rpc("monthly_profit");
+    if (!error) {
+      setMonthlyProfit(data);
+    }
+  }, []);
+
+  const getMonthlySales = useCallback(async () => {
+    const { data, error } = await supabase.rpc("monthly_sales");
+    if (!error) {
+      setMonthlySales(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    getMonthlyCarsSold();
+    getMonthlyCommission();
+    getMonthlyProfit();
+    getMonthlySales();
+  }, [getMonthlyCarsSold, getMonthlyCommission, getMonthlyProfit, getMonthlySales]);
 
   return (
     <DashboardLayout>
@@ -74,34 +116,31 @@ function MonthlyDashboard() {
         <VuiBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Monthly Cars Sold" }}
-                count="5.5"
-                percentage={{ color: "success", text: "+100%" }}
+                count={monthlyCars}
+                // percentage={{ color: "success", text: "+100%" }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
-            <MiniStatisticsCard
+              <MiniStatisticsCard
                 title={{ text: "Monthly Commission", fontWeight: "regular" }}
-                count="$1,547"
-                percentage={{ color: "success", text: "+100%" }}
+                count={monthlyCommission}
                 icon={{ color: "info", component: <IoWallet size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Monthly Gross Profit" }}
-                count="+18,498"
-                percentage={{ color: "success", text: "+100%%" }}
+                count={monthlyProfit}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Total Monthly Sales" }}
-                count="$322,017"
-                percentage={{ color: "success", text: "+100%" }}
+                count={monthlySales}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>
@@ -281,11 +320,10 @@ function MonthlyDashboard() {
         </VuiBox>
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
-          <Projects />
+            <Projects />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <ToDoListWidget />
-          
           </Grid>
         </Grid>
       </VuiBox>

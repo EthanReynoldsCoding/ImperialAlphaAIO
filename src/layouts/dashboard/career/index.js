@@ -61,10 +61,52 @@ import { lineChartDataDashboard } from "layouts/dashboard/career/data/lineChartD
 import { lineChartOptionsDashboard } from "layouts/dashboard/career/data/lineChartOptions";
 import { barChartDataDashboard } from "layouts/dashboard/career/data/barChartData";
 import { barChartOptionsDashboard } from "layouts/dashboard/career/data/barChartOptions";
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "supabaseClient";
 
 function CareerDashboard() {
+  const [careerCars, setCareerCars] = useState(0);
+  const [careerCommission, setCareerCommission] = useState(0);
+  const [careerProfit, setCareerProfit] = useState(0);
+  const [careerSales, setCareerSales] = useState(0);
+
   const { gradients } = colors;
   const { cardContent } = gradients;
+
+  const getCareerCarsSold = useCallback(async () => {
+    const { data, error } = await supabase.rpc("career_cars_sold");
+    if (!error) {
+      setCareerCars(data);
+    }
+  }, []);
+
+  const getCareerCommission = useCallback(async () => {
+    const { data, error } = await supabase.rpc("career_commission");
+    if (!error) {
+      setCareerCommission(data);
+    }
+  }, []);
+
+  const getCareerProfit = useCallback(async () => {
+    const { data, error } = await supabase.rpc("career_profit");
+    if (!error) {
+      setCareerProfit(data);
+    }
+  }, []);
+
+  const getCareerSales = useCallback(async () => {
+    const { data, error } = await supabase.rpc("career_sales");
+    if (!error) {
+      setCareerSales(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    getCareerCarsSold();
+    getCareerCommission();
+    getCareerProfit();
+    getCareerSales();
+  }, [getCareerCarsSold, getCareerCommission, getCareerProfit, getCareerSales]);
 
   return (
     <DashboardLayout>
@@ -76,32 +118,29 @@ function CareerDashboard() {
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Career Cars Sold" }}
-                count="5.5"
-                percentage={{ color: "success", text: "+100%" }}
+                count={careerCars}
+                // percentage={{ color: "success", text: "+100%" }}
                 icon={{ color: "info", component: <IoGlobe size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Career Commission", fontWeight: "regular" }}
-                count="$1,547"
-                percentage={{ color: "success", text: "+100%" }}
+                count={careerCommission}
                 icon={{ color: "info", component: <IoWallet size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Career Gross Profit" }}
-                count="+18,498"
-                percentage={{ color: "success", text: "+100%" }}
+                count={careerProfit}
                 icon={{ color: "info", component: <IoDocumentText size="22px" color="white" /> }}
               />
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "Career Daily Sales" }}
-                count="$322,017"
-                percentage={{ color: "success", text: "+100%" }}
+                title={{ text: "Career Career Sales" }}
+                count={careerSales}
                 icon={{ color: "info", component: <FaShoppingCart size="20px" color="white" /> }}
               />
             </Grid>
