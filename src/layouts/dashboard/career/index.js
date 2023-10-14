@@ -66,37 +66,37 @@ import { supabase } from "supabaseClient";
 
 function CareerDashboard() {
   const [careerCars, setCareerCars] = useState(0);
-  const [careerCommission, setCareerCommission] = useState(0);
-  const [careerProfit, setCareerProfit] = useState(0);
-  const [careerSales, setCareerSales] = useState(0);
+  const [careerCommission, setCareerCommission] = useState("$0");
+  const [careerProfit, setCareerProfit] = useState("$0");
+  const [careerSales, setCareerSales] = useState("$0");
 
   const { gradients } = colors;
   const { cardContent } = gradients;
 
   const getCareerCarsSold = useCallback(async () => {
     const { data, error } = await supabase.rpc("career_cars_sold");
-    if (!error) {
+    if (!error && data) {
       setCareerCars(data);
     }
   }, []);
 
   const getCareerCommission = useCallback(async () => {
     const { data, error } = await supabase.rpc("career_commission");
-    if (!error) {
+    if (!error && data) {
       setCareerCommission(data);
     }
   }, []);
 
   const getCareerProfit = useCallback(async () => {
     const { data, error } = await supabase.rpc("career_profit");
-    if (!error) {
+    if (!error && data) {
       setCareerProfit(data);
     }
   }, []);
 
   const getCareerSales = useCallback(async () => {
     const { data, error } = await supabase.rpc("career_sales");
-    if (!error) {
+    if (!error && data) {
       setCareerSales(data);
     }
   }, []);

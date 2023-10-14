@@ -60,9 +60,9 @@ import dayjs from "dayjs";
 function DailyDashboard() {
   const [salesCount, setSalesCount] = useState(0);
   const [dailyCars, setDailyCars] = useState(0);
-  const [dailyCommission, setDailyCommission] = useState(0);
-  const [dailyProfit, setDailyProfit] = useState(0);
-  const [dailySales, setDailySales] = useState(0);
+  const [dailyCommission, setDailyCommission] = useState("$0");
+  const [dailyProfit, setDailyProfit] = useState("$0");
+  const [dailySales, setDailySales] = useState("$0");
 
   const cardContent = linearGradient(
     colors.gradients.cardContent.main,
@@ -76,35 +76,35 @@ function DailyDashboard() {
   const getSales = useCallback(async () => {
     const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
 
-    if (!sumError) {
+    if (!sumError && sum) {
       setSalesCount(sum);
     }
   }, []);
 
   const getDailyCarsSold = useCallback(async () => {
     const { data, error } = await supabase.rpc("daily_cars_sold");
-    if (!error) {
+    if (!error && data) {
       setDailyCars(data);
     }
   }, []);
 
   const getDailyCommission = useCallback(async () => {
     const { data, error } = await supabase.rpc("daily_commission");
-    if (!error) {
+    if (!error && data) {
       setDailyCommission(data);
     }
   }, []);
 
   const getDailyProfit = useCallback(async () => {
     const { data, error } = await supabase.rpc("daily_profit");
-    if (!error) {
+    if (!error && data) {
       setDailyProfit(data);
     }
   }, []);
 
   const getDailySales = useCallback(async () => {
     const { data, error } = await supabase.rpc("daily_sales");
-    if (!error) {
+    if (!error && data) {
       setDailySales(data);
     }
   }, []);
@@ -230,9 +230,6 @@ function DailyDashboard() {
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <ToDoListWidget />
-          </Grid>
-          <Grid item xs={12} md={6} lg={12}>
-            <Presale />
           </Grid>
         </Grid>
       </VuiBox>

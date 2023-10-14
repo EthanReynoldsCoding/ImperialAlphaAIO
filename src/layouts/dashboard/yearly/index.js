@@ -66,37 +66,37 @@ import { supabase } from "supabaseClient";
 
 function YearlyDashboard() {
   const [yearlyCars, setYearlyCars] = useState(0);
-  const [yearlyCommission, setYearlyCommission] = useState(0);
-  const [yearlyProfit, setYearlyProfit] = useState(0);
-  const [yearlySales, setYearlySales] = useState(0);
+  const [yearlyCommission, setYearlyCommission] = useState("$0");
+  const [yearlyProfit, setYearlyProfit] = useState("$0");
+  const [yearlySales, setYearlySales] = useState("$0");
 
   const { gradients } = colors;
   const { cardContent } = gradients;
 
   const getYearlyCarsSold = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_cars_sold");
-    if (!error) {
+    if (!error && data) {
       setYearlyCars(data);
     }
   }, []);
 
   const getYearlyCommission = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_commission");
-    if (!error) {
+    if (!error && data) {
       setYearlyCommission(data);
     }
   }, []);
 
   const getYearlyProfit = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_profit");
-    if (!error) {
+    if (!error && data) {
       setYearlyProfit(data);
     }
   }, []);
 
   const getYearlySales = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_sales");
-    if (!error) {
+    if (!error && data) {
       setYearlySales(data);
     }
   }, []);

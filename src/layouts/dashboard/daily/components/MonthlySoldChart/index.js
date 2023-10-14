@@ -129,8 +129,6 @@ function MonthlySoldChart({ cardContent, crntYear }) {
     }
   }, []);
 
-  console.log("seriesc", series);
-
   useEffect(() => {
     getResult();
   }, [getResult]);
