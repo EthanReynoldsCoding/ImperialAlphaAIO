@@ -23,8 +23,6 @@ export const AuthProvider = ({ children }) => {
       } = await supabase.auth.getSession();
       if (error) throw error;
 
-      // console.log("session", session);
-
       if (session?.provider_token) {
         const oAuthToken = session.provider_token;
 
@@ -32,12 +30,10 @@ export const AuthProvider = ({ children }) => {
           data: { oAuthToken },
         });
         if (error) {
-          console.log(error);
+          console.error(error);
         }
 
         const valid = await checkIfValidUser(oAuthToken);
-
-        console.log("valid", valid);
 
         if (valid) {
           setSession(session);
@@ -72,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      // console.log("onAuthStateChange");
       setSession(session);
       setUser(session?.user);
       setLoading(false);

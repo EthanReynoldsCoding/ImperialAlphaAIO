@@ -1,61 +1,46 @@
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "supabaseClient";
+
+import { Card } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
-import { Card, LinearProgress, Stack } from "@mui/material";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import VuiProgress from "components/VuiProgress";
 
 // Vision UI Dashboard React example components
+import linearGradient from "assets/theme/functions/linearGradient";
+import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
+import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import linearGradient from "assets/theme/functions/linearGradient";
 
 // Vision UI Dashboard React base styles
-import typography from "assets/theme/base/typography";
 import colors from "assets/theme/base/colors";
 
 // Dashboard layout components
-import WelcomeMark from "layouts/dashboard/daily/components/WelcomeMark";
-import Projects from "layouts/dashboard/daily/components/Projects";
-import OrderOverview from "layouts/dashboard/daily/components/OrderOverview";
-import SatisfactionRate from "layouts/dashboard/daily/components/SatisfactionRate";
-import ReferralTracking from "layouts/dashboard/daily/components/ReferralTracking";
 import Header from "layouts/dashboard/Header/index";
+import Projects from "layouts/dashboard/daily/components/Projects";
+import ReferralTracking from "layouts/dashboard/daily/components/ReferralTracking";
+import SatisfactionRate from "layouts/dashboard/daily/components/SatisfactionRate";
+import WelcomeMark from "layouts/dashboard/daily/components/WelcomeMark";
 import ToDoListWidget from "widgets/TDList";
 import Presale from "widgets/presold";
-import Calendar from "layouts/calendar/index.js";
 
 // React icons
-import { IoIosRocket } from "react-icons/io";
-import { IoGlobe } from "react-icons/io5";
-import { IoBuild } from "react-icons/io5";
-import { IoWallet } from "react-icons/io5";
-import { IoDocumentText } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
-
-// Data
-import LineChart from "examples/Charts/LineCharts/LineChart";
-import BarChart from "examples/Charts/BarCharts/BarChart";
-import { lineChartOptionsDashboard } from "layouts/dashboard/daily/data/lineChartOptions";
-import { barChartDataDashboard } from "layouts/dashboard/daily/data/barChartData";
-import { barChartOptionsDashboard } from "layouts/dashboard/daily/data/barChartOptions";
-import { salesTableData } from "layouts/dashboard/daily/data/salesTableData";
+import { IoDocumentText, IoGlobe, IoWallet } from "react-icons/io5";
 
 // Components
-import SoldPerMonth from "layouts/dashboard/daily/components/SoldPerMonth";
 import CommissionPerCar from "layouts/dashboard/daily/components/CommissionPerCar";
-import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
-import TotalSalesPerMonth from "layouts/dashboard/daily/components/TotalSalesPerMonth";
-import SalesOverView from "layouts/dashboard/daily/components/SalesOverView";
 import MonthlySoldChart from "layouts/dashboard/daily/components/MonthlySoldChart";
+import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
+import SalesOverView from "layouts/dashboard/daily/components/SalesOverView";
+import SoldPerMonth from "layouts/dashboard/daily/components/SoldPerMonth";
+import TotalSalesPerMonth from "layouts/dashboard/daily/components/TotalSalesPerMonth";
 
-import { useCallback, useEffect, useState } from "react";
-import { supabase } from "supabaseClient";
-import dayjs from "dayjs";
+// Utils
+import calcCurrentYear from "utils/calcCurrentYear";
 
 function DailyDashboard() {
   const [salesCount, setSalesCount] = useState(0);
@@ -70,14 +55,13 @@ function DailyDashboard() {
     colors.gradients.cardContent.deg
   );
 
-  const today = new Date();
-  const crntYear = dayjs(today).format("YYYY");
+  const crntYear = calcCurrentYear();
 
-  const getSales = useCallback(async () => {
-    const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
+  const countSum = useCallback(async () => {
+    const { data, error } = await supabase.rpc("sum_of_count_from_sales");
 
-    if (!sumError && sum) {
-      setSalesCount(sum);
+    if (!error && data) {
+      setSalesCount(data);
     }
   }, []);
 
@@ -110,12 +94,12 @@ function DailyDashboard() {
   }, []);
 
   useEffect(() => {
-    getSales();
+    countSum();
     getDailyCarsSold();
     getDailyCommission();
     getDailyProfit();
     getDailySales();
-  }, [getDailyCarsSold, getDailyCommission, getDailyProfit, getDailySales, getSales]);
+  }, [countSum, getDailyCarsSold, getDailyCommission, getDailyProfit, getDailySales]);
 
   return (
     <DashboardLayout>
