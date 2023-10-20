@@ -72,11 +72,12 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  background-color: #f2f2f2; /* Default background color */
+  background-color: rgba(16, 13, 34, 0.1); /* Semi-transparent background color */
 }
 
+
 .dark-mode .chat-container {
-  background-color: #020101; /* Dark mode background color */
+  background-color: rgba(16, 13, 34, 0.1);  /* Dark mode background color */
 }
 
 .message {
