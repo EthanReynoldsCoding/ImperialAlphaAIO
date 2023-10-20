@@ -1,82 +1,78 @@
-/*!
-
-=========================================================
-* Vision UI Free React - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
-
-* Design and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import { useCallback, useEffect, useState } from "react";
-import { supabase } from "supabaseClient";
-
-// @mui material components
-import { Card } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
+import { Card, LinearProgress, Stack } from "@mui/material";
+import dayjs from "dayjs";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
+import VuiProgress from "components/VuiProgress";
 
 // Vision UI Dashboard React example components
-import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
-import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
+import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCard";
+import linearGradient from "assets/theme/functions/linearGradient";
 
 // Vision UI Dashboard React base styles
+import typography from "assets/theme/base/typography";
 import colors from "assets/theme/base/colors";
 
 // Dashboard layout components
-import Header from "layouts/dashboard/Header/index";
-import Projects from "layouts/dashboard/yearly/components/Projects";
-import ReferralTracking from "layouts/dashboard/yearly/components/ReferralTracking";
+import WelcomeMark from "layouts/dashboard/daily/components/WelcomeMark";
+import Projects from "layouts/dashboard/daily/components/Projects";
+import OrderOverview from "layouts/dashboard/daily/components/OrderOverview";
 import SatisfactionRate from "layouts/dashboard/yearly/components/SatisfactionRate";
-import WelcomeMark from "layouts/dashboard/yearly/components/WelcomeMark";
+import SalesDaysOfWeek from "layouts/dashboard/daily/components/SalesByDayOfWeek";
+import ReferralTracking from "layouts/dashboard/daily/components/ReferralTracking";
+import Header from "layouts/dashboard/Header/index";
 import ToDoListWidget from "widgets/TDList";
-
-// React icons
-import { FaShoppingCart } from "react-icons/fa";
-import { IoDocumentText, IoGlobe, IoWallet } from "react-icons/io5";
+import Presale from "widgets/presold";
 
 // Components
-import CommissionPerCar from "layouts/dashboard/daily/components/CommissionPerCar";
-import MonthlySoldChart from "layouts/dashboard/daily/components/MonthlySoldChart";
-import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
-import SalesOverView from "layouts/dashboard/daily/components/SalesOverView";
 import SoldPerMonth from "layouts/dashboard/daily/components/SoldPerMonth";
+import CommissionPerCar from "layouts/dashboard/daily/components/CommissionPerCar";
+import ProfitPerCar from "layouts/dashboard/daily/components/ProfitPerCar";
 import TotalSalesPerMonth from "layouts/dashboard/daily/components/TotalSalesPerMonth";
+import SalesOverView from "layouts/dashboard/daily/components/SalesOverView";
+import MonthlySoldChart from "layouts/dashboard/daily/components/MonthlySoldChart";
 
-// Utils
-import calcCurrentYear from "utils/calcCurrentYear";
+// React icons
+import { IoIosRocket } from "react-icons/io";
+import { IoGlobe } from "react-icons/io5";
+import { IoBuild } from "react-icons/io5";
+import { IoWallet } from "react-icons/io5";
+import { IoDocumentText } from "react-icons/io5";
+import { FaShoppingCart } from "react-icons/fa";
+
+// Data
+import LineChart from "examples/Charts/LineCharts/LineChart";
+import BarChart from "examples/Charts/BarCharts/BarChart";
+import { lineChartDataDashboard } from "layouts/dashboard/yearly/data/lineChartData";
+import { lineChartOptionsDashboard } from "layouts/dashboard/yearly/data/lineChartOptions";
+import { barChartDataDashboard } from "layouts/dashboard/yearly/data/barChartData";
+import { barChartOptionsDashboard } from "layouts/dashboard/yearly/data/barChartOptions";
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "supabaseClient";
 
 function YearlyDashboard() {
-  const [salesCount, setSalesCount] = useState(0);
   const [yearlyCars, setYearlyCars] = useState(0);
   const [yearlyCommission, setYearlyCommission] = useState("$0");
   const [yearlyProfit, setYearlyProfit] = useState("$0");
   const [yearlySales, setYearlySales] = useState("$0");
+  const [salesCount, setSalesCount] = useState(0);
+  const [dailyCars, setDailyCars] = useState(0);
+  const [dailyCommission, setDailyCommission] = useState("$0");
+  const [dailyProfit, setDailyProfit] = useState("$0");
+  const [dailySales, setDailySales] = useState("$0");
 
   const { gradients } = colors;
   const { cardContent } = gradients;
 
-  const crntYear = calcCurrentYear();
-
-  const countSum = useCallback(async () => {
-    const { data, error } = await supabase.rpc("sum_of_count_from_sales");
-
-    if (!error && data) {
-      setSalesCount(data);
-    }
-  }, []);
+  
+  const today = new Date();
+  const crntYear = dayjs(today).format("YYYY");
 
   const getYearlyCarsSold = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_cars_sold");
@@ -99,6 +95,42 @@ function YearlyDashboard() {
     }
   }, []);
 
+  const getSales = useCallback(async () => {
+    const { data: sum, sumError } = await supabase.rpc("sum_of_count_from_sales");
+
+    if (!sumError && sum) {
+      setSalesCount(sum);
+    }
+  }, []);
+
+  const getDailyCarsSold = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_cars_sold");
+    if (!error && data) {
+      setDailyCars(data);
+    }
+  }, []);
+
+  const getDailyCommission = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_commission");
+    if (!error && data) {
+      setDailyCommission(data);
+    }
+  }, []);
+
+  const getDailyProfit = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_profit");
+    if (!error && data) {
+      setDailyProfit(data);
+    }
+  }, []);
+
+  const getDailySales = useCallback(async () => {
+    const { data, error } = await supabase.rpc("daily_sales");
+    if (!error && data) {
+      setDailySales(data);
+    }
+  }, []);
+
   const getYearlySales = useCallback(async () => {
     const { data, error } = await supabase.rpc("yearly_sales");
     if (!error && data) {
@@ -107,12 +139,16 @@ function YearlyDashboard() {
   }, []);
 
   useEffect(() => {
-    countSum();
     getYearlyCarsSold();
     getYearlyCommission();
     getYearlyProfit();
     getYearlySales();
-  }, [countSum, getYearlyCarsSold, getYearlyCommission, getYearlyProfit, getYearlySales]);
+    getSales();
+    getDailyCarsSold();
+    getDailyCommission();
+    getDailyProfit();
+    getDailySales();
+  }, [getYearlyCarsSold, getYearlyCommission, getYearlyProfit, getYearlySales, getDailyCarsSold, getDailyCommission, getDailyProfit, getDailySales, getSales]);
 
   return (
     <DashboardLayout>
@@ -155,10 +191,11 @@ function YearlyDashboard() {
         <VuiBox mb={3}>
           <Grid container spacing="18px">
             <Grid item xs={12} lg={12} xl={5}>
-              <WelcomeMark />
+            <WelcomeMark />
             </Grid>
             <Grid item xs={12} lg={6} xl={3}>
               <SatisfactionRate />
+                
             </Grid>
             <Grid item xs={12} lg={6} xl={4}>
               <ReferralTracking />
@@ -198,6 +235,32 @@ function YearlyDashboard() {
             </Grid>
           </Grid>
         </VuiBox>
+        <Grid
+          container
+          spacing={3}
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          mb={3}
+        >
+          <Grid item xs={12} md={6} lg={8}>
+          <Card style={{ height: "100%" }}>
+                <SalesDaysOfWeek />
+              </Card>
+
+           
+          </Grid>
+          <Grid item xs={12} md={3} lg={4}>
+          <Card style={{ height: "100%" }}>
+
+           <ReferralTracking />
+          </Card>
+        </Grid>
+            
+          <Grid item xs={12} md={6} lg={12}>
+            <Presale />
+          </Grid>
+        </Grid>
         <Grid container spacing={3} direction="row" justifyContent="center" alignItems="stretch">
           <Grid item xs={12} md={6} lg={8}>
             <Projects />
