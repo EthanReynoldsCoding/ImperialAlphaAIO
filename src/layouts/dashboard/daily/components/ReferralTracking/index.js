@@ -1,162 +1,212 @@
-import React from 'react';
-import { Card, Stack } from '@mui/material';
+import { useCallback, useEffect, useState } from "react";
+import { Card } from '@mui/material';
 import VuiBox from 'components/VuiBox';
 import VuiTypography from 'components/VuiTypography';
-import colors from 'assets/theme/base/colors';
 import { FaEllipsisH } from 'react-icons/fa';
-import linearGradient from 'assets/theme/functions/linearGradient';
-import CircularProgress from '@mui/material/CircularProgress';
+import { supabase } from "supabaseClient";
+import './referraltracking.css'; // Import your CSS file
+import { PieChart, Pie, Tooltip, Cell, Legend } from 'recharts';
+import Button from '@mui/material/Button';
+
 
 function ReferralTracking() {
-	const { info, gradients } = colors;
-	const { cardContent } = gradients;
+	const [Lot_Leads, setLot_Leads] = useState(0);
+	const [Inbound_Leads, setInbound_Leads] = useState(0);
+	const [Outbound_Leads, setOutbound_Leads] = useState(0);
+	const [Global_Leads, setGlobal_Leads] = useState(0);
+	const [Service_Leads, setService_Leads] = useState(0);
+	const [Facebook_Leads, setFacebook_Leads] = useState(0);
+	const [Friends_Leads, setFriends_Leads] = useState(0);
+	const [Referral_Leads, setReferral_Leads] = useState(0);
+	const [Repeat_Leads, setRepeat_Leads] = useState(0);
+	const [Other_Leads, setOther_Leads] = useState(0);
 
-	return (
-		<Card
-			sx={{
-				height: '100%',
-				background: linearGradient(gradients.cardDark.main, gradients.cardDark.state, gradients.cardDark.deg)
-			}}>
-			<VuiBox sx={{ width: '100%' }}>
-				<VuiBox
-					display='flex'
-					alignItems='center'
-					justifyContent='space-beetween'
-					sx={{ width: '100%' }}
-					mb='40px'>
-					<VuiTypography variant='lg' color='white' mr='auto' fontWeight='bold'>
-						Referral Tracking
-					</VuiTypography>
-					<VuiBox
-						display='flex'
-						justifyContent='center'
-						alignItems='center'
-						bgColor='#22234B'
-						sx={{ width: '37px', height: '37px', cursor: 'pointer', borderRadius: '12px' }}>
-						<FaEllipsisH color={info.main} size='18px' />
-					</VuiBox>
-				</VuiBox>
-				<VuiBox
-					display='flex'
-					sx={({ breakpoints }) => ({
-						[breakpoints.up('xs')]: {
-							flexDirection: 'column',
-							gap: '16px',
-							justifyContent: 'center',
-							alignItems: 'center'
-						},
-						[breakpoints.up('md')]: {
-							flexDirection: 'row',
-							justifyContent: 'flex-start',
-							alignItems: 'center'
-						}
-					})}>
-					<Stack
-						direction='column'
-						spacing='20px'
-						width='500px'
-						maxWidth='50%'
-						sx={({ breakpoints }) => ({
-							mr: 'auto',
-							[breakpoints.only('md')]: {
-								mr: '75px'
-							},
-							[breakpoints.only('xl')]: {
-								width: '500px',
-								maxWidth: '40%'
-							}
-						})}>
-						<VuiBox
-							display='flex'
-							width='220px'
-							p='20px 22px'
-							flexDirection='column'
-							sx={({ breakpoints }) => ({
-								background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-								borderRadius: '20px',
-								[breakpoints.up('xl')]: {
-									maxWidth: '110px !important'
-								},
-								[breakpoints.up('xxl')]: {
-									minWidth: '180px',
-									maxWidth: '100% !important'
-								}
-							})}>
-							<VuiTypography color='text' variant='button' fontWeight='regular' mb='5px'>
-								Invited
-							</VuiTypography>
-							<VuiTypography color='white' variant='lg' fontWeight='bold'>
-								145 people
-							</VuiTypography>
-						</VuiBox>
-						<VuiBox
-							display='flex'
-							width='220px'
-							p='20px 22px'
-							flexDirection='column'
-							sx={({ breakpoints }) => ({
-								background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-								borderRadius: '20px',
-								[breakpoints.up('xl')]: {
-									maxWidth: '110px !important'
-								},
-								[breakpoints.up('xxl')]: {
-									minWidth: '180px',
-									maxWidth: '100% !important'
-								}
-							})}>
-							<VuiTypography color='text' variant='button' fontWeight='regular' mb='5px'>
-								Bonus
-							</VuiTypography>
-							<VuiTypography color='white' variant='lg' fontWeight='bold'>
-								1,465
-							</VuiTypography>
-						</VuiBox>
-					</Stack>
-					<VuiBox sx={{ position: 'relative', display: 'inline-flex' }}>
-						<CircularProgress
-							variant='determinate'
-							value={70}
-							size={window.innerWidth >= 1024 ? 200 : window.innerWidth >= 768 ? 170 : 200}
-							color='success'
-						/>
-						<VuiBox
-							sx={{
-								top: 0,
-								left: 0,
-								bottom: 0,
-								right: 0,
-								position: 'absolute',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center'
-							}}>
-							<VuiBox display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
-								<VuiTypography color='text' variant='button' mb='4px'>
-									Safety
-								</VuiTypography>
-								<VuiTypography
-									color='white'
-									variant='d5'
-									fontWeight='bold'
-									mb='4px'
-									sx={({ breakpoints }) => ({
-										[breakpoints.only('xl')]: {
-											fontSize: '32px'
-										}
-									})}>
-									9.3
-								</VuiTypography>
-								<VuiTypography color='text' variant='button'>
-									Total Score
-								</VuiTypography>
-							</VuiBox>
-						</VuiBox>
-					</VuiBox>
-				</VuiBox>
-			</VuiBox>
-		</Card>
-	);
+
+	const getLot_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("lot_leads");
+	
+		if (!sumError && sum) {
+		  setLot_Leads(sum);
+		}
+	}, []);
+
+	const getInbound_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("inbound_leads");
+	
+		if (!sumError && sum) {
+		  setInbound_Leads(sum);
+		}
+	}, []);
+
+	const getOutbound_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("outbound_leads");
+	
+		if (!sumError && sum) {
+		  setOutbound_Leads(sum);
+		}
+	}, []);
+
+	const getGlobal_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("global_leads");
+
+		if (!sumError && sum) {
+		  setGlobal_Leads(sum);
+		}
+	}, []);
+
+	const getService_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("service_leads");
+
+		if (!sumError && sum) {
+		  setService_Leads(sum);
+		}
+	}, []);
+
+	const getFacebook_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("facebook_leads");
+
+		if (!sumError && sum) {
+		  setFacebook_Leads(sum);
+		}
+	})
+
+	const getFriends_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("friends_leads");
+
+		if (!sumError && sum) {
+		  setFriends_Leads(sum);
+		}
+	})
+		 
+	const getReferral_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("referral_leads");
+
+		if (!sumError && sum) {
+		  setReferral_Leads(sum);
+		}
+	})
+
+	const getRepeat_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("repeat_leads");
+
+		if (!sumError && sum) {
+		  setRepeat_Leads(sum);
+		}
+	})
+
+	const getOther_Leads = useCallback(async () => {
+		const { data: sum, sumError } = await supabase.rpc("other_leads");
+
+		if (!sumError && sum) {
+		  setOther_Leads(sum);
+		}
+	})
+
+
+		
+	useEffect(() => {
+		getLot_Leads();
+		getInbound_Leads();
+		getOutbound_Leads();
+		getGlobal_Leads();
+		getService_Leads();
+		getFacebook_Leads();
+		getFriends_Leads();
+		getReferral_Leads();
+		getRepeat_Leads();
+		getOther_Leads();
+	}, [getLot_Leads,getInbound_Leads, getOutbound_Leads, getGlobal_Leads, getService_Leads, getFacebook_Leads, getFriends_Leads, getReferral_Leads, getRepeat_Leads, getOther_Leads]);
+
+
+	const printComponent = () => {
+		// Create a print-friendly version of the component for printing
+		const printWindow = window.open('', '', 'width=800,height=600');
+		printWindow.document.open();
+		printWindow.document.write(`
+		  <html>
+			<head>
+			  <title>Lead Origin Comparison</title>
+			  <link rel="stylesheet" href="your-styles.css"> <!-- Add your CSS file -->
+			</head>
+			<body>
+			  <h1>Lead Origin Comparison</h1>
+			  <div id="chartContainer">
+				${document.getElementById('chartContainer').innerHTML}
+			  </div>
+			</body>
+		  </html>
+		`);
+		printWindow.document.close();
+		printWindow.print();
+		printWindow.onafterprint = function () {
+		  printWindow.close();
+		};
+	  };
+
+  // Define the data after fetching results
+  const data = [
+    { name: 'Lot', value: Lot_Leads }, // Remove the curly braces
+    { name: 'Inbound Call', value: Inbound_Leads },
+    { name: 'Outbound Call', value: Outbound_Leads },
+    { name: 'Global Lead', value: Global_Leads },
+    { name: 'Service', value: Service_Leads },
+    { name: 'Facebook', value: Facebook_Leads },
+    { name: 'Friends & Family', value: Friends_Leads },
+    { name: 'Referral', value: Referral_Leads },
+    { name: 'Repeat Customer', value: Repeat_Leads },
+    { name: 'Other', value: Other_Leads },
+  ];
+
+  const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF5733', '#5B65E0', '#FFA057', '#67C0DD', '#FFD700', '#47D572'];
+
+  return (
+    <Card sx={{ height: '340px' }}>
+      <VuiBox sx={{ width: '100%' }}>
+        <VuiBox display='flex' alignItems='center' justifyContent='space-between' sx={{ width: '100%', marginBottom: '10px' }}>
+          <VuiTypography variant='lg' color='white' mr='auto' fontWeight='bold'>
+            Lead Origin Comparison
+          </VuiTypography>
+          <VuiBox display='flex' justifyContent='center' alignItems='center' sx={{ width: '49px', height: '49px', cursor: 'pointer', borderRadius: '12px' }}>
+            <Button variant="contained" color="primary" onClick={printComponent}>
+              Print
+            </Button>
+          </VuiBox>
+        </VuiBox>
+        <VuiBox
+          display='flex'
+          sx={({ breakpoints }) => ({
+            [breakpoints.up('xs')]: {
+              flexDirection: 'column',
+              gap: '16px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            [breakpoints.up('md')]: {
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            },
+          })}
+        >
+          <VuiBox sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'row' }}>
+            <div id="chartContainer">
+              <PieChart width={500} height={500}>
+                <Pie dataKey='value' data={data} cx={150} cy={100} outerRadius={80} fill='#8884d8'>
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => `${value} leads (${((value / data.reduce((acc, entry) => acc + entry.value, 0)) * 100).toFixed(2)}%)`}
+                />
+                <Legend align="left" verticalAlign="middle" layout="vertical" wrapperStyle={{ left: 0, top: 0, fontSize: '14px' }} />
+              </PieChart>
+            </div>
+          </VuiBox>
+        </VuiBox>
+      </VuiBox>
+    </Card>
+  );
 }
 
 export default ReferralTracking;
