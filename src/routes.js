@@ -5,7 +5,7 @@ import CareerDashboard from "layouts/dashboard/career";
 import News from "layouts/news";
 import Calendar from "./layouts/calendar";
 import Billing from "layouts/billing";
-import EmailBuilder from "layouts/email";
+import Calculator from "layouts/calculator";
 import TablesLayout from "layouts/data-tables";
 import Indy from "layouts/notes";
 import IAApp from "layouts/ia";
@@ -19,7 +19,7 @@ import SignUp from "layouts/authentication/sign-up";
 // Imperial Alpha Dashboard React icons
 import { IoRocketSharp } from "react-icons/io5";
 import { IoIosDocument } from "react-icons/io";
-import { BsFillPersonFill } from "react-icons/bs";
+import { BsCalculator, BsFillPersonFill } from "react-icons/bs";
 import { IoBuild } from "react-icons/io5";
 import { BsCreditCardFill } from "react-icons/bs";
 import { IoStatsChart } from "react-icons/io5";
@@ -107,11 +107,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Email",
-    key: "email",
-    route: "/email",
-    icon: <DraftsIcon size="15px" color="inherit" />,
-    element: <EmailBuilder />,
+    name: "Calculator",
+    key: "calculator",
+    route: "/calculator",
+    icon: <BsCalculator size="15px" color="inherit" />,
+    element: <Calculator />,
     noCollapse: true,
     protected: true,
   },
