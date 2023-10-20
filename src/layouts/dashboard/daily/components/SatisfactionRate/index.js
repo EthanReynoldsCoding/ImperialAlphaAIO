@@ -8,9 +8,14 @@ import colors from 'assets/theme/base/colors';
 import linearGradient from 'assets/theme/functions/linearGradient';
 import CircularProgress from '@mui/material/CircularProgress';
 
+
+
+
 const SatisfactionRate = () => {
 	const { info, gradients } = colors;
 	const { cardContent } = gradients;
+	
+	
 
 	return (
 		<Card sx={{ height: '340px' }}>
@@ -64,7 +69,7 @@ const SatisfactionRate = () => {
 						zIndex: '1000'
 					})}>
 					<VuiTypography color='text' variant='caption' display='inline-block' fontWeight='regular'>
-						0
+					0
 					</VuiTypography>
 					<VuiBox
 						flexDirection='column'
