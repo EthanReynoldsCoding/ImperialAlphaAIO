@@ -150,9 +150,7 @@ function EventForm(props) {
     if (!values.lead_source) {
       errors.lead_source = "Lead source is required";
     }  
-    if (!values.timetosell) {
-      errors.timetosell = "Time to sell is required";
-    }
+    
     if (!values.date) {
       errors.date = "Date is required";
     }
