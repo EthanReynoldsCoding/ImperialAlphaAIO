@@ -9,7 +9,7 @@ export default {
     { Header: "SALE PRICE", accessor: "sale", width: "7.5%" },
     { Header: "PROFIT", accessor: "profit", width: "7.5%" },
     { Header: "COMMISSION", accessor: "commission", width: "7.5%" },
-    { Header: "Trade-in Holdback", accessor: "trade-in_holdback", width: "7.5%" },
+    { Header: "Trade-in Holdback", accessor: "tradeinholdback", width: "7.5%" },
     { Header: "LEAD SOURCE", accessor: "lead_source", width: "10%" },
     { Header: "TIME TO SELL", accessor: "timetosell", width: "10%" },
     { Header: "DATE", accessor: "date", width: "7.5%" },
