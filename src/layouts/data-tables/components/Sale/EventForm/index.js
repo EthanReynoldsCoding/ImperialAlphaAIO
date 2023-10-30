@@ -103,7 +103,7 @@ function EventForm(props) {
     sale: "",
     profit: "",
     commission: "",
-    discountedgross: "",
+    tradeinholdback: "",
     lead_source: "",
     timetosell: "",
     date: "",
@@ -165,16 +165,14 @@ function EventForm(props) {
     if (!values.commission) {
       errors.commission = "Commission is required";
     }
-    if (!values.discountedgross) {
-      errors.discountedgross = "Discounted Gross is required";
+    if (!values.tradeinholdback) {
+      errors.tradeinholdback = "Trade-in holdback is required";
     }
 
     if (!values.lead_source) {
       errors.lead_source = "Lead source is required";
     }  
-    if (!values.timetosell) {
-      errors.timetosell = "Time to sell is required";
-    }
+
     if (!values.date) {
       errors.date = "Date is required";
     }
@@ -410,17 +408,17 @@ function EventForm(props) {
             <Grid item xs={12} sm={6}>
               <FormField
                 type="money"
-                label="Discounted Gross"
+                label="Trade-in Holdback"
                 placeholder="eg. $2,000"
-                value={formValues.discountedgross}
+                value={formValues.tradeinholdback}
 
-                name="discountedgross"
+                name="tradeinholdback"
                 onChange={handleChange}
-                error={formErrors.discountedgross && true}
+                error={formErrors.tradeinholdback && true}
               />
-              {formErrors.discountedgross && (
+              {formErrors.tradeinholdback && (
                 <Alert severity="error" className="error_alert">
-                  {formErrors.discountedgross}
+                  {formErrors.tradeinholdback}
                 </Alert>
               )}
             </Grid>
