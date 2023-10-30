@@ -65,12 +65,27 @@ function EventForm(props) {
     "Facebook",
     "Friends & Family",
     "Referral",
+    "Repeat Customer",
     "Other",
   ];
   const PossibleCounts = [
     "0",
     "0.5",
     "1",
+  ];
+  const PossiblePencils = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",  
+    "7",
+  ];
+  const PossibleTos = [
+    "Yes",
+    "No",
+    
   ];
 
   const yearOptions = Array.from({ length: 26 }, (_, index) => {
@@ -88,11 +103,14 @@ function EventForm(props) {
     sale: "",
     profit: "",
     commission: "",
+    discountedgross: "",
     lead_source: "",
     timetosell: "",
     date: "",
     count: "",
+    pencil: "",
     chit: "",
+    to: "",
   };
 
   const [formValues, setFormValues] = useState(edit ? data : initialValues);
@@ -147,18 +165,30 @@ function EventForm(props) {
     if (!values.commission) {
       errors.commission = "Commission is required";
     }
+    if (!values.discountedgross) {
+      errors.discountedgross = "Discounted Gross is required";
+    }
+
     if (!values.lead_source) {
       errors.lead_source = "Lead source is required";
     }  
-    
+    if (!values.timetosell) {
+      errors.timetosell = "Time to sell is required";
+    }
     if (!values.date) {
       errors.date = "Date is required";
     }
     if (!values.count) {
       errors.count = "Count is required";
     }
+    if (!values.pencil) {
+      errors.pencil = "Pencil is required";
+    }
     if (!values.chit) {
       errors.chit = "Chit is required";    
+    }
+    if (!values.to) {
+      errors.to = "To is required";    
     }
 
     return errors;
@@ -378,6 +408,23 @@ function EventForm(props) {
               )}
             </Grid>
             <Grid item xs={12} sm={6}>
+              <FormField
+                type="money"
+                label="Discounted Gross"
+                placeholder="eg. $2,000"
+                value={formValues.discountedgross}
+
+                name="discountedgross"
+                onChange={handleChange}
+                error={formErrors.discountedgross && true}
+              />
+              {formErrors.discountedgross && (
+                <Alert severity="error" className="error_alert">
+                  {formErrors.discountedgross}
+                </Alert>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <VuiTypography
                 component="label"
                 variant="caption"
@@ -474,6 +521,34 @@ function EventForm(props) {
                 </Alert>
               )}
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <VuiTypography variant="body1" color="white">
+                Pencil
+              </VuiTypography>
+              <VuiSelect
+                defaultValue={
+                  edit
+                    ? {
+                        name: "pencil",
+                        value: formValues.pencil,
+                        label: formValues.pencil,
+                      }
+                    : null
+                }
+                options={PossiblePencils.map((pencil) => ({
+                  name: "pencil",
+                  value: pencil,
+                  label: pencil,
+                }))}
+                onChange={handleChange}
+                error={formErrors.pencil && true}
+              />
+              {formErrors.pencil && (
+                <Alert severity="error" className="error_alert">
+                  {formErrors.pencil}
+                </Alert>
+              )}
+            </Grid>
             <Grid item xs={12} sm={6} style={{ textTransform: "capitalize" }}>
               <VuiTypography variant="body1" color="white">
                 Chit
@@ -498,6 +573,33 @@ function EventForm(props) {
               {formErrors.chit && (
                 <Alert severity="error" className="error_alert">
                   {formErrors.chit}
+                </Alert>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={6} style={{ textTransform: "capitalize" }}>
+              <VuiTypography variant="body1" color="white">
+                T.O.
+              </VuiTypography>
+              <VuiSelect
+                defaultValue={
+                  edit
+                    ? {
+                        name: "T.O.",
+                        value: formValues.to,
+                        label: formValues.to,
+                      }
+                    : null
+                }
+                options={[
+                  { name: "to", value: "yes", label: "Yes" },
+                  { name: "to", value: "no", label: "No" },
+                ]}
+                onChange={handleChange}
+                error={formErrors.to && true}
+              />
+              {formErrors.to && (
+                <Alert severity="error" className="error_alert">
+                  {formErrors.tot}
                 </Alert>
               )}
             </Grid>
