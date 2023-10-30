@@ -1,19 +1,3 @@
-/** 
-
-=========================================================
-* Vision UI PRO React - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/vision-ui-dashboard-pro-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-
-* Design and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Visionware.
-
-*/
 
 import { useMemo, useEffect, useState } from "react";
 
@@ -37,6 +21,8 @@ import VuiSelect from "components/VuiSelect";
 import VuiInput from "components/VuiInput";
 import VuiPagination from "components/VuiPagination";
 
+
+
 // Vision UI Dashboard PRO React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
@@ -53,7 +39,7 @@ function DataTable({
   setDataUpdates,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
-  const entries = entriesPerPage.entries ? entriesPerPage.entries : [5, 10, 15, 20, 25];
+  const entries = entriesPerPage.entries ? entriesPerPage.entries : [5, 10, 15, 20, 25, 30, 50, 75, 100, 200];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
 
@@ -294,7 +280,7 @@ function DataTable({
 
 // Setting default values for the props of DataTable
 DataTable.defaultProps = {
-  entriesPerPage: { defaultValue: 10, entries: [5, 10, 15, 20, 25] },
+  entriesPerPage: { defaultValue: 10, entries: [5, 10, 15, 20, 25, 30, 50, 75, 100, 200] },
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
@@ -332,3 +318,4 @@ DataTable.propTypes = {
 };
 
 export default DataTable;
+
