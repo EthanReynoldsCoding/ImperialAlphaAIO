@@ -9,13 +9,16 @@ export default {
     { Header: "SALE PRICE", accessor: "sale", width: "7.5%" },
     { Header: "PROFIT", accessor: "profit", width: "7.5%" },
     { Header: "COMMISSION", accessor: "commission", width: "7.5%" },
+    { Header: "Discounted Gross", accessor: "discountedgross", width: "7.5%" },
     { Header: "LEAD SOURCE", accessor: "lead_source", width: "10%" },
     { Header: "TIME TO SELL", accessor: "timetosell", width: "10%" },
     { Header: "DATE", accessor: "date", width: "7.5%" },
     { Header: "COUNT", accessor: "count", width: "5%" },
+    { Header: "PENCIL", accessor: "pencil", width: "5%" },
     { Header: "CHIT", accessor: "chit", width: "5%" },
+    { Header: "TO", accessor: "to", width: "5%" },
     { accessor: "edit", width: "10%" },
-  ],
+  ],   
 
   rows: [],
   pageSize: 60, // Removed curly braces
