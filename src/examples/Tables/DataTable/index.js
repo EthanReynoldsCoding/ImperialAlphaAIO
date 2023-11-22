@@ -1,4 +1,3 @@
-
 import { useMemo, useEffect, useState } from "react";
 
 // prop-types is a library for typechecking of props
@@ -21,8 +20,6 @@ import VuiSelect from "components/VuiSelect";
 import VuiInput from "components/VuiInput";
 import VuiPagination from "components/VuiPagination";
 
-
-
 // Vision UI Dashboard PRO React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
@@ -39,7 +36,9 @@ function DataTable({
   setDataUpdates,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
-  const entries = entriesPerPage.entries ? entriesPerPage.entries : [5, 10, 15, 20, 25, 30, 50, 75, 100, 200];
+  const entries = entriesPerPage.entries
+    ? entriesPerPage.entries
+    : [5, 10, 15, 20, 25, 30, 50, 75, 100, 200];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
 
@@ -218,11 +217,11 @@ function DataTable({
                     noBorder={noEndBorder && rows.length - 1 === key}
                     align={cell.column.align ? cell.column.align : "left"}
                     {...cell.getCellProps()}
+                    id={cell.column.id}
+                    data={row.original}
+                    setDataUpdates={setDataUpdates}
                   >
                     {cell.render("Cell")}
-                    {cell.column.id === "edit" && (
-                      <EditSection data={row.original} setDataUpdates={setDataUpdates} />
-                    )}
                   </DataTableBodyCell>
                 ))}
               </TableRow>
@@ -318,4 +317,3 @@ DataTable.propTypes = {
 };
 
 export default DataTable;
-

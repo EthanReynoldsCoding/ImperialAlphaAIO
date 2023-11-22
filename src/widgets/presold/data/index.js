@@ -10,7 +10,7 @@ import avatar1 from "assets/images/avatar1.png";
 import avatar2 from "assets/images/avatar2.png";
 import avatar3 from "assets/images/avatar3.png";
 import avatar4 from "assets/images/avatar4.png";
-import Deletion from "components/Deletion";
+import DeletionForm from "components/DeletionForm";
 import EditForm from "layouts/dashboard/daily/components/Projects/EditForm";
 
 import EditSection from "widgets/presold/EditSection";

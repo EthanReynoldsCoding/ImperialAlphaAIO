@@ -26,29 +26,54 @@ import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
 
-function DataTableBodyCell({ noBorder, align, children }) {
+import NewSale from "layouts/data-tables/components/Sale";
+import EditSection from "examples/Tables/DataTable/EditSection";
+
+import { useState } from "react";
+
+import "./index.css";
+
+function DataTableBodyCell({ noBorder, align, id, data, setDataUpdates, children }) {
   const { light, grey } = colors;
   const { size } = typography;
   const { borderWidth } = borders;
 
+  const [viewOpen, setViewOpen] = useState(false);
+
+  const handleViewOpen = () => {
+    setViewOpen(true);
+  };
+
+  const handleViewClose = () => {
+    setViewOpen(false);
+  };
+
   return (
-    <VuiBox
-      component="td"
-      textAlign={align}
-      fontSize={size.sm}
-      borderBottom={noBorder ? "none" : `${borderWidth[1]} solid ${grey[700]}`}
-      py={1.5}
-      px={3}
-    >
+    <>
       <VuiBox
-        display="inline-block"
-        width="max-content"
-        color="text"
-        sx={{ verticalAlign: "middle" }}
+        component="td"
+        textAlign={align}
+        fontSize={size.sm}
+        borderBottom={noBorder ? "none" : `${borderWidth[1]} solid ${grey[700]}`}
+        py={1.5}
+        px={3}
+        style={{ cursor: "pointer" }}
+        onClick={handleViewOpen}
       >
-        {children}
+        <VuiBox
+          display="inline-block"
+          width="max-content"
+          color="text"
+          sx={{ verticalAlign: "middle" }}
+        >
+          {children}
+        </VuiBox>
       </VuiBox>
-    </VuiBox>
+      {viewOpen && (
+        <NewSale open={viewOpen} handleClose={handleViewClose} view={true} data={data} />
+      )}
+      {id === "edit" && <EditSection data={data} setDataUpdates={setDataUpdates} />}
+    </>
   );
 }
 

@@ -10,7 +10,7 @@ function NewEvent(props) {
   const { open, handleClose, edit, data, setDataUpdated } = props;
 
   return (
-    <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
+    <Dialog onClose={handleClose} open={open} fullWidth maxWidth="lg">
       <Grid container className="tables_dialog">
         <Grid item xs={12}>
           <Card

@@ -1,22 +1,4 @@
-/*!
-
-=========================================================
-* Vision UI Free React - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
-
-* Design and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import { forwardRef, createContext, useContext } from "react";
+import React, { forwardRef, createContext, useContext } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -27,16 +9,16 @@ import VuiBox from "components/VuiBox";
 // Custom styles for VuiPagination
 import VuiPaginationItemRoot from "components/VuiPagination/VuiPaginationItemRoot";
 
-// The Pagination main context
-const Context = createContext();
+// Create a context for your pagination
+const PaginationContext = createContext();
 
 const VuiPagination = forwardRef(
   ({ item, variant, color, size, active, children, ...rest }, ref) => {
-    const context = item ? useContext(Context) : null;
+    const context = useContext(PaginationContext);
     const paginationSize = context ? context.size : null;
 
     return (
-      <Context.Provider value={{ variant, color, size }}>
+      <PaginationContext.Provider value={{ variant, color, size }}>
         {item ? (
           <VuiPaginationItemRoot
             {...rest}
@@ -59,7 +41,7 @@ const VuiPagination = forwardRef(
             {children}
           </VuiBox>
         )}
-      </Context.Provider>
+      </PaginationContext.Provider>
     );
   }
 );
@@ -70,7 +52,6 @@ VuiPagination.defaultProps = {
   variant: "gradient",
   color: "info",
   size: "medium",
-  active: false,
 };
 
 // Typechecking props for the VuiPagination

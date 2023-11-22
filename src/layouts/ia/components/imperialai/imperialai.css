@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between; /* Align items to the left and right edges */
   padding: 16px;
-  background-color: #e8c976;
+  background-color: rgba(232, 201, 118, 0.9);
   border-bottom: 1px solid #000000;
   border-top-left-radius: 16px; /* Add radius to top left corner */
   border-top-right-radius: 16px; /* Add radius to top right corner */
@@ -107,7 +107,7 @@
   margin-top: 16px;
   border-radius: 8px;
   padding: 4px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .input-field {

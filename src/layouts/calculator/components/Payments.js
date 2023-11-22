@@ -24,7 +24,7 @@ const PaymentCalculator = () => {
   const calculatemonthlyPayment = () => {
     const monthlyInterestRate = interestRate / 12 / 100;
     const numberOfPayments = term;
-    const loanAmountMinusDownPayment = loanAmount - downPayment + tradeIn;
+    const loanAmountMinusDownPayment = loanAmount - downPayment - tradeIn;
 
     if (monthlyInterestRate === 0) {
       setMonthlyPayment(loanAmountMinusDownPayment / numberOfPayments);

@@ -7,7 +7,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
-import Deletion from "components/Deletion";
+import DeletionForm from "components/DeletionForm";
 import borders from "assets/theme/base/borders";
 import colors from "assets/theme/base/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -168,7 +168,7 @@ function Todo({ color, todo, defaultChecked, noDivider, setDataUpdated }) {
         </VuiBox>
       </VuiBox>
       {noDivider ? null : <Divider light sx={{ marginBottom: 0 }} />}
-      <Deletion open={deletionOpen} handleClose={handleDeletionClose} deletion={deleteTodo} />
+      <DeletionForm open={deletionOpen} handleClose={handleDeletionClose} deletion={deleteTodo} />
     </VuiBox>
   );
 }

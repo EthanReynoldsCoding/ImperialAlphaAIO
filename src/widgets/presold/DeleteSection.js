@@ -14,7 +14,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Deletion from "components/Deletion";
+import DeletionForm from "components/DeletionForm";
 
 import PresaleForm from "widgets/presold/PresaleForm";
 
@@ -53,7 +53,7 @@ export default function DeleteSection(props) {
         <DeleteIcon />
       </IconButton>
 
-      {open && <Deletion open={open} handleClose={handleClose} deletion={deletePresale} />}
+      {open && <DeletionForm open={open} handleClose={handleClose} deletion={deletePresale} />}
     </div>
   );
 }

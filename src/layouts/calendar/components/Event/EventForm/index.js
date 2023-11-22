@@ -5,7 +5,7 @@ import VuiTypography from "components/VuiTypography";
 import VuiEditor from "components/VuiEditor";
 import VuiSelect from "components/VuiSelect";
 import FormField from "layouts/calendar/components/Event/FormField";
-import Deletion from "components/Deletion";
+import DeletionForm from "components/DeletionForm";
 
 import Alert from "@mui/material/Alert";
 import Icon from "@mui/material/Icon";
@@ -309,7 +309,11 @@ function EventForm(props) {
             )}
           </VuiBox>
         </VuiBox>
-        <Deletion open={deletionFormOpen} handleClose={closeDeletionForm} deletion={deleteEvent} />
+        <DeletionForm
+          open={deletionFormOpen}
+          handleClose={closeDeletionForm}
+          deletion={deleteEvent}
+        />
       </form>
     </VuiBox>
   );

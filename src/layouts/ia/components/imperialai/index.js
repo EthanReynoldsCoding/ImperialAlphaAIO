@@ -1,14 +1,36 @@
-// C:\Users\Ethan Reynolds\Documents\Businesses\Imperial Alpha\Software\ImperialAlphaAIO\vision-ui-dashboard-react-main\src\layouts\ia\components\imperialai\index.js
-
 import React, { useState, useEffect } from "react";
 import { Avatar, Button, InputBase, Paper, Typography, Switch } from "@mui/material";
 import axios from 'axios';
+import { supabase } from "supabaseClient"; // Import Supabase client
 import "./imperialai.css";
 
 function ImperialAI() {
   const [inputText, setInputText] = useState("");
   const [chat, setChat] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [apiKey, setApiKey] = useState(''); // Store the API key
+
+
+
+  useEffect(() => {
+    // Fetch the API key from the Supabase database
+    const fetchApiKey = async () => {
+      const { data, error } = await supabase
+        .from('API') // Table name
+        .select('apikeys') // Column name
+        .eq('id', 1); // Filter by ID
+
+      if (error) {
+        console.error('Error fetching API key:', error);
+      } else {
+        if (data.length > 0) {
+          setApiKey(data[0].apikeys);
+        }
+      }
+    };
+
+    fetchApiKey();
+  }, []);
 
   const handleResetChat = () => {
     localStorage.removeItem('chat'); // Remove the chat from local storage
@@ -46,11 +68,11 @@ function ImperialAI() {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': process.env.IMPERIAL_AI_API,
+            'Authorization': `Bearer ' + '${apiKey}`, // Use the fetched API key
           },
         }
       );
-  
+
       const generatedResponse = response.data.choices[0].text.trim();
   
       const chatbotResponse = {

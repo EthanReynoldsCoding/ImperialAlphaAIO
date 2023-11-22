@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Dialog from "@mui/material/Dialog";
@@ -10,9 +10,17 @@ import EventForm from "layouts/data-tables/components/Sale/EventForm"; // Import
 import CloseIcon from "@mui/icons-material/Close"; // Import the CloseIcon from MUI
 import Icon from "@mui/material/Icon";
 import dayjs from "dayjs";
+import { useReactToPrint } from "react-to-print";
+import PrintIcon from "@mui/icons-material/Print";
 
 function NewSale(props) {
-  const { open, handleClose, edit, data } = props;
+  const { open, handleClose, edit, data, view } = props;
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="md">
@@ -31,10 +39,23 @@ function NewSale(props) {
           >
             <CloseIcon />
           </div>
-          <VuiBox p={2}>
+          {view && (
+            <PrintIcon
+              style={{ color: "#fff", marginLeft: "10px", marginTop: "10px", cursor: "pointer" }}
+              fontSize="large"
+              onClick={handlePrint}
+            />
+          )}
+          <VuiBox p={2} ref={componentRef}>
             <VuiBox>
               {/* Render only the EventForm */}
-              <EventForm handleClose={handleClose} edit={edit} data={data} />
+              <EventForm
+                onClose={handleClose}
+                handleClose={handleClose}
+                edit={edit}
+                view={view}
+                data={data}
+              />
             </VuiBox>
           </VuiBox>
         </Grid>

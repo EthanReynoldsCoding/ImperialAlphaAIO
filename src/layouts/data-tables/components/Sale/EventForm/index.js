@@ -17,7 +17,7 @@ import { useAuth } from "hooks/Auth";
 import "./style.css";
 
 function EventForm(props) {
-  const { handleClose, edit, data } = props;
+  const { handleClose, edit, view, data } = props;
 
   const { user } = useAuth();
   const topCarMakes = [
@@ -54,7 +54,7 @@ function EventForm(props) {
     "Pontiac",
     "Hummer",
     "Mercury",
-    "Other"
+    "Other",
   ];
   const LeadSources = [
     "Lot",
@@ -68,25 +68,9 @@ function EventForm(props) {
     "Repeat Customer",
     "Other",
   ];
-  const PossibleCounts = [
-    "0",
-    "0.5",
-    "1",
-  ];
-  const PossiblePencils = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",  
-    "7",
-  ];
-  const PossibleTos = [
-    "Yes",
-    "No",
-    
-  ];
+  const PossibleCounts = ["0", "0.5", "1"];
+  const PossiblePencils = ["1", "2", "3", "4", "5", "6", "7"];
+  const PossibleTos = ["Yes", "No"];
 
   const yearOptions = Array.from({ length: 26 }, (_, index) => {
     const year = 2025 - index;
@@ -113,7 +97,7 @@ function EventForm(props) {
     to: "",
   };
 
-  const [formValues, setFormValues] = useState(edit ? data : initialValues);
+  const [formValues, setFormValues] = useState(edit || view ? data : initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [disabled, setDisabled] = useState(edit);
@@ -155,7 +139,7 @@ function EventForm(props) {
     if (!values.model) {
       errors.model = "Model is required";
     }
-    
+
     if (!values.sale) {
       errors.sale = "Sale is required";
     }
@@ -171,8 +155,8 @@ function EventForm(props) {
 
     if (!values.lead_source) {
       errors.lead_source = "Lead source is required";
-    }  
-    
+    }
+
     if (!values.date) {
       errors.date = "Date is required";
     }
@@ -183,10 +167,10 @@ function EventForm(props) {
       errors.pencil = "Pencil is required";
     }
     if (!values.chit) {
-      errors.chit = "Chit is required";    
+      errors.chit = "Chit is required";
     }
     if (!values.to) {
-      errors.to = "To is required";    
+      errors.to = "To is required";
     }
 
     return errors;
@@ -226,7 +210,9 @@ function EventForm(props) {
   return (
     <VuiBox>
       <VuiTypography variant="h5" color="white">
-        Add New Sale
+        {edit && <>Edit Sale</>}
+        {view && <>View Sale</>}
+        {!view && !edit && <>Add New Sale</>}
       </VuiTypography>
       <form onSubmit={handleSubmit}>
         <VuiBox mt={3}>
@@ -240,6 +226,7 @@ function EventForm(props) {
                 value={formValues.customer_name}
                 onChange={handleChange}
                 error={formErrors.customer_name && true}
+                disabled={view}
               />
               {formErrors.customer_name && (
                 <Alert severity="error" className="error_alert">
@@ -253,7 +240,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "condition",
                         value: formValues.condition,
@@ -261,6 +248,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={[
                   { name: "condition", value: "new", label: "New" },
                   { name: "condition", value: "used", label: "Used" },
@@ -283,7 +271,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "year",
                         value: formValues.year,
@@ -291,6 +279,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={yearOptions}
                 onChange={handleChange}
                 error={formErrors.year && true}
@@ -307,7 +296,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "make",
                         value: formValues.make,
@@ -315,6 +304,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={topCarMakes.map((make) => ({ name: "make", value: make, label: make }))}
                 onChange={handleChange}
                 error={formErrors.make && true}
@@ -334,6 +324,7 @@ function EventForm(props) {
                 name="model"
                 onChange={handleChange}
                 error={formErrors.model && true}
+                disabled={view}
               />
               {formErrors.model && (
                 <Alert severity="error" className="error_alert">
@@ -350,6 +341,7 @@ function EventForm(props) {
                 value={formValues.trim}
                 onChange={handleChange}
                 error={formErrors.trim && true}
+                disabled={view}
               />
               {formErrors.trim && (
                 <Alert severity="error" className="error_alert">
@@ -366,6 +358,7 @@ function EventForm(props) {
                 name="sale"
                 onChange={handleChange}
                 error={formErrors.sale && true}
+                disabled={view}
               />
               {formErrors.sale && (
                 <Alert severity="error" className="error_alert">
@@ -382,6 +375,7 @@ function EventForm(props) {
                 name="profit"
                 onChange={handleChange}
                 error={formErrors.profit && true}
+                disabled={view}
               />
               {formErrors.profit && (
                 <Alert severity="error" className="error_alert">
@@ -398,6 +392,7 @@ function EventForm(props) {
                 name="commission"
                 onChange={handleChange}
                 error={formErrors.commission && true}
+                disabled={view}
               />
               {formErrors.commission && (
                 <Alert severity="error" className="error_alert">
@@ -411,10 +406,10 @@ function EventForm(props) {
                 label="Discounted Gross"
                 placeholder="eg. $2,000"
                 value={formValues.discountedgross}
-
                 name="discountedgross"
                 onChange={handleChange}
                 error={formErrors.discountedgross && true}
+                disabled={view}
               />
               {formErrors.discountedgross && (
                 <Alert severity="error" className="error_alert">
@@ -434,7 +429,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "lead_source",
                         value: formValues.lead_source,
@@ -442,6 +437,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={LeadSources.map((lead_source) => ({
                   name: "lead_source",
                   value: lead_source,
@@ -465,6 +461,7 @@ function EventForm(props) {
                 name="timetosell"
                 onChange={handleChange}
                 error={formErrors.timetosell && true}
+                disabled={view}
               />
               {formErrors.timetosell && (
                 <Alert severity="error" className="error_alert">
@@ -483,6 +480,7 @@ function EventForm(props) {
                   onChange={handleChange}
                   renderInput={(params) => <TextField {...params} />}
                   error={formErrors.date && true}
+                  disabled={view}
                 />
               </LocalizationProvider>
               {formErrors.date && (
@@ -497,7 +495,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "count",
                         value: formValues.count,
@@ -505,6 +503,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={PossibleCounts.map((count) => ({
                   name: "count",
                   value: count,
@@ -525,7 +524,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "pencil",
                         value: formValues.pencil,
@@ -533,6 +532,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={PossiblePencils.map((pencil) => ({
                   name: "pencil",
                   value: pencil,
@@ -553,7 +553,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "chit",
                         value: formValues.chit,
@@ -561,6 +561,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={[
                   { name: "chit", value: "yes", label: "Yes" },
                   { name: "chit", value: "no", label: "No" },
@@ -580,7 +581,7 @@ function EventForm(props) {
               </VuiTypography>
               <VuiSelect
                 defaultValue={
-                  edit
+                  edit || view
                     ? {
                         name: "T.O.",
                         value: formValues.to,
@@ -588,6 +589,7 @@ function EventForm(props) {
                       }
                     : null
                 }
+                isDisabled={view}
                 options={[
                   { name: "to", value: "yes", label: "Yes" },
                   { name: "to", value: "no", label: "No" },
@@ -603,17 +605,19 @@ function EventForm(props) {
             </Grid>
           </Grid>
         </VuiBox>
-        <VuiBox mt={3} width="100%" display="flex" justifyContent="flex-end">
-          {edit ? (
-            <VuiButton type="submit" variant="contained" color="success" disabled={disabled}>
-              <Icon sx={{ fontWeight: "bold" }}>edit</Icon>
-            </VuiButton>
-          ) : (
-            <VuiButton type="submit" variant="contained" color="info">
-              <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-            </VuiButton>
-          )}
-        </VuiBox>
+        {!view && (
+          <VuiBox mt={3} width="100%" display="flex" justifyContent="flex-end">
+            {edit ? (
+              <VuiButton type="submit" variant="contained" color="success" disabled={disabled}>
+                <Icon sx={{ fontWeight: "bold" }}>edit</Icon>
+              </VuiButton>
+            ) : (
+              <VuiButton type="submit" variant="contained" color="info">
+                <Icon sx={{ fontWeight: "bold" }}>add</Icon>
+              </VuiButton>
+            )}
+          </VuiBox>
+        )}
       </form>
     </VuiBox>
   );

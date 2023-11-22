@@ -1,50 +1,80 @@
-/*!
+//C:\Users\Ethan Reynolds\Documents\Businesses\Imperial Alpha\Software\ImperialAlphaAIO\frontendv0.2.1\src\layouts\billing\components\Invoices\index.js
 
-=========================================================
-* Vision UI Free React - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/vision-ui-free-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com/)
-* Licensed under MIT (https://github.com/creativetimofficial/vision-ui-free-react/blob/master LICENSE.md)
-
-* Design and Coded by Simmmple & Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// @mui material components
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-
-// Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
+import { supabase } from "supabaseClient";
+import { useAuth } from "hooks/Auth";
+import StubPage from "./Components/stubpage.js";
+import InvoiceLines from "./Components/invoicelines.js";
+import Icon from "@mui/material/Icon";
 
-// Billing page components
-import Invoice from "layouts/billing/components/Invoice";
+function Invoices({ openPaystubForm, openStubPage }) {
+  const [paystubs, setPaystubs] = useState([]);
+  const { user } = useAuth();
+  const [selectedPaystub, setSelectedPaystub] = useState(null);
 
-function Invoices() {
+  useEffect(() => {
+    async function fetchPaystubs() {
+      const { data, error } = await supabase
+        .from("paystubs")
+        .select("date, id, gross_pay, new_car_sales, used_car_sales, spiffs, other, taxes, period_beginning_date, period_ending_date, take_home")
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching paystubs:", error);
+      } else {
+        setPaystubs(data);
+      }
+    }
+
+    fetchPaystubs();
+  }, []);
+
+  const handleClickOpen = () => {
+    openPaystubForm(); // This opens PaystubForm
+  };
+
+  const handlePDFClick = (paystub) => {
+    setSelectedPaystub(paystub);
+    openStubPage(selectedPaystub); // This opens StubPage with the selected paystub
+  };
+
+  useEffect(() => {
+    // This code will run whenever selectedPaystub changes
+    // You can trigger any side effects or updates here
+  }, [selectedPaystub]);
+
   return (
     <Card id="delete-account" sx={{ height: "100%" }}>
       <VuiBox mb="28px" display="flex" justifyContent="space-between" alignItems="center">
-        <VuiTypography variant="h6" fontWeight="medium" color="white">
-          Invoices
-        </VuiTypography>
+        <VuiBox display="flex" alignItems="center">
+          <VuiTypography variant="h6" fontWeight="medium" color="white">
+            Paychecks
+          </VuiTypography>
+        </VuiBox>
+        <VuiBox display="flex" alignItems="flex-end">
+          <VuiButton variant="contained" color="info" size="small" onClick={handleClickOpen}>
+            <Icon sx={{ fontWeight: "bold" }}>add</Icon>
+          </VuiButton>
+        </VuiBox>
         <VuiButton variant="contained" color="info" size="small">
           VIEW ALL
         </VuiButton>
       </VuiBox>
       <VuiBox>
         <VuiBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-          <Invoice date="March, 01, 2020" id="#MS-415646" price="$180" />
-          <Invoice date="February, 10, 2021" id="#RV-126749" price="$250" />
-          <Invoice date="April, 05, 2020" id="#QW-103578" price="$120" />
-          <Invoice date="June, 25, 2019" id="#MS-415646" price="$180" />
-          <Invoice date="March, 01, 2019" id="#AR-803481" price="$300" noGutter />
+          {paystubs.map((paystub, index) => (
+            <InvoiceLines
+              key={index}
+              date={paystub.date}
+              id={`#${paystub.id}`}
+              price={paystub.gross_pay}
+              onClickPDF={() => handlePDFClick(paystub)} // Open StubPage on PDF click
+            />
+          ))}
         </VuiBox>
       </VuiBox>
     </Card>
@@ -52,3 +82,13 @@ function Invoices() {
 }
 
 export default Invoices;
+
+
+
+
+
+
+
+//const { user } = useAuth();
+//const { id: userId } = user;
+//C:\Users\Ethan Reynolds\Documents\Businesses\Imperial Alpha\Software\ImperialAlphaAIO\frontendv0.2.1\src\layouts\billing\components\Invoices\Components\Event\PaystubForm\formfield.js

@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
-import VuiSelect from "components/VuiSelect"; // Import the Select component
+import VuiSelect from "components/VuiSelect";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -27,7 +27,7 @@ function TablesLayout() {
     setOpen(true);
   };
 
-  const handleClose = useCallback(async () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
     setDataUpdates(true);
   }, []);
@@ -61,34 +61,51 @@ function TablesLayout() {
     const query = selectedMonth
       ? supabase.from("sales").select().eq("user_id", userId).eq("date", selectedMonth)
       : supabase.from("sales").select().eq("user_id", userId);
-  
+
     const { data } = await query;
-  
+
     // Don't change the original dates, only format for display
     const formattedData = data.map((sale) => ({
       ...sale,
-      dateFormatted: new Date(sale.date).toLocaleDateString("en-US")
+      dateFormatted: new Date(sale.date).toLocaleDateString("en-US"),
     }));
-  
-    setSales(formattedData || []);
+
+    setSales(formattedData);
   }, [userId, selectedMonth]);
-  
+
   useEffect(() => {
     getSales();
     setDataUpdates(false);
   }, [dataUpdated, getSales]);
-  
 
   const handleFilterByMonth = () => {
-    setIsFilterDisabled(true);
+    setIsFilterDisabled(true); // Disable the filter button
     getSales();
   };
 
   // Function to handle month selection
   const handleMonthSelect = (event) => {
-    setSelectedMonth(event.target.value);
-    setIsFilterDisabled(false); // Enable the filter button
+    const selectedValue = event.target.value;
+    setSelectedMonth(selectedValue);
+    setIsFilterDisabled(!selectedValue); // Enable or disable the filter button based on the selection
   };
+
+  // Define options for the Select component
+  const monthOptions = [
+    { value: "", label: "Select Month" },
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
 
   return (
     <DashboardLayout>
@@ -114,40 +131,38 @@ function TablesLayout() {
                 >
                   Filter by Month
                 </VuiButton>
-                <VuiButton variant="contained" color="primary" onClick={handleClickOpen} style={{ marginLeft: "10px" }}>
+                <VuiButton
+                  variant="contained"
+                  color="primary"
+                  onClick={handleClickOpen}
+                  style={{ marginLeft: "10px" }}
+                >
                   Add Sale
                 </VuiButton>
-                <VuiButton variant="contained" color="primary" onClick={handlePrint} style={{ marginLeft: "10px" }}>
+                <VuiButton
+                  variant="contained"
+                  color="primary"
+                  onClick={handlePrint}
+                  style={{ marginLeft: "10px" }}
+                >
                   Print
                 </VuiButton>
               </div>
               <div style={{ marginBottom: "10px" }}>
-                {/* Select component for month selection */}
                 <VuiSelect
                   label="Select Month"
                   value={selectedMonth}
                   onChange={handleMonthSelect}
                   sx={{ minWidth: "150px" }}
-                >
-                  <option value="">Select Month</option>
-                  <option value="01">January</option>
-                  <option value="02">February</option>
-                  <option value="03">March</option>
-                  <option value="04">April</option>
-                  <option value="05">May</option>
-                  <option value="06">June</option>
-                  <option value="07">July</option>
-                  <option value="08">August</option>
-                  <option value="09">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </VuiSelect>
+                  options={monthOptions}
+                />
               </div>
             </VuiBox>
-            <NewSale open={open} handleClose={handleClose} setDataUpdates={setDataUpdates} />
+            {open && (
+              <NewSale open={open} handleClose={handleClose} setDataUpdates={setDataUpdates} />
+            )}
             <DataTable
-              table={{ columns: dataTableData.columns, rows: [...dataTableData["rows"], ...sales] }}
+              table={{ columns: dataTableData.columns, rows: [...dataTableData.rows, ...sales] }}
               canSearch
               setDataUpdates={setDataUpdates}
             />
@@ -160,5 +175,3 @@ function TablesLayout() {
 }
 
 export default TablesLayout;
-
-

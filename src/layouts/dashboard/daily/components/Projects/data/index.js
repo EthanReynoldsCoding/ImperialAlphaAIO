@@ -2,9 +2,6 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 
 // @mui material components
 import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 
 // Vision UI Dashboard React components
 import VuiBox from "components/VuiBox";
@@ -24,16 +21,14 @@ import avatar2 from "assets/images/avatar2.png";
 import avatar3 from "assets/images/avatar3.png";
 import avatar4 from "assets/images/avatar4.png";
 
-import Deletion from "components/Deletion";
-import EditForm from "layouts/dashboard/daily/components/Projects/EditForm";
+import Editation from "layouts/dashboard/daily/components/Projects/Editation";
+import Deletion from "layouts/dashboard/daily/components/Projects/Deletion";
 
 import { supabase } from "supabaseClient";
 import { useAuth } from "hooks/Auth";
 
 export default function Data(dataUpdated, setDataUpdated) {
   const [leads, setLeads] = useState([]);
-  const [openDeletion, setOpenDeletion] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
 
   const { user } = useAuth();
   const userId = user?.id;
@@ -47,36 +42,6 @@ export default function Data(dataUpdated, setDataUpdated) {
       setLeads(data);
     }
   }, [userId]);
-
-  const handleOpenDeletion = () => {
-    setOpenDeletion(true);
-  };
-
-  const handleClose = () => {
-    setOpenDeletion(false);
-  };
-
-  const handleOpenEdit = () => {
-    setOpenEdit(true);
-  };
-
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  };
-
-  const deleteLead = useCallback(
-    async (id) => {
-      const { error } = await supabase.from("leads").delete().eq("id", id);
-
-      if (error) {
-        console.log(error);
-      } else {
-        setOpenDeletion(false);
-        setDataUpdated(true);
-      }
-    },
-    [setDataUpdated]
-  );
 
   const avatars = [avatar1, avatar2, avatar3, avatar4];
 
@@ -139,19 +104,8 @@ export default function Data(dataUpdated, setDataUpdated) {
                 );
               })}
             </>
-            <IconButton aria-label="edit" size="small" color="success" onClick={handleOpenEdit}>
-              <EditIcon />
-            </IconButton>
-            {openEdit && (
-              <EditForm
-                open={openEdit}
-                onClose={handleCloseEdit}
-                handleCloseEdit={handleCloseEdit}
-                setDataUpdated={setDataUpdated}
-                data={lead.customers}
-                id={lead.id}
-              />
-            )}
+
+            <Editation lead={lead} setDataUpdated={setDataUpdated} />
           </VuiBox>
         ),
         price: (
@@ -172,18 +126,7 @@ export default function Data(dataUpdated, setDataUpdated) {
             />
           </VuiBox>
         ),
-        delete: (
-          <>
-            <IconButton aria-label="delete" size="small" color="error" onClick={handleOpenDeletion}>
-              <DeleteIcon />
-            </IconButton>
-            <Deletion
-              open={openDeletion}
-              handleClose={handleClose}
-              deletion={() => deleteLead(lead.id)}
-            />
-          </>
-        ),
+        delete: <Deletion id={lead.id} setDataUpdated={setDataUpdated} />,
       };
     }),
     leads,

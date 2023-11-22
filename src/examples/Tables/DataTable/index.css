@@ -1,0 +1,10 @@
+tr {
+    position: relative;
+    
+}
+.edit-section {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -15px;
+}

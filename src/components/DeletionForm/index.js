@@ -6,7 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { red } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 
-function Deletion({ open, handleClose, deletion }) {
+function DeletionForm({ open, handleClose, deletion }) {
   const YesButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(red[500]),
     backgroundColor: red[500],
@@ -36,4 +36,4 @@ function Deletion({ open, handleClose, deletion }) {
     </Dialog>
   );
 }
-export default Deletion;
+export default DeletionForm;

@@ -24,17 +24,14 @@ const SpendingPowerCalculator = () => {
     const numberOfPayments = term;
     const spendingPower =
       (monthlyPayment * ((1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments)) / monthlyInterestRate)) +
-      downPayment +
+      downPayment -
       tradeIn;
-  
+
     setSpendingPower(spendingPower);
   };
-  
-  
 
   return (
-    
-    <Card elevation={3} variant="outlined" >
+    <Card elevation={3} variant="outlined">
       <CardContent>
         <Box p={3}>
           <Typography variant="h5" gutterBottom align="center" style={{ color: 'white' }}>
@@ -69,7 +66,7 @@ const SpendingPowerCalculator = () => {
               <InputLabel style={{ color: 'white' }}>Term (Months)</InputLabel>
               <Select
                 value={term}
-                onChange={(e) => setTerm(e.target.value)}
+                onChange={(e) => setTerm(parseInt(e.target.value))}
                 variant="outlined"
                 sx={{ width: '25%' }}
               >
@@ -91,20 +88,19 @@ const SpendingPowerCalculator = () => {
             />
           </Box>
           <Box mt={2} display="flex" justifyContent="center">
-          <Button
-  sx={{ width: '20%', backgroundColor: 'primary', color: 'black' }}
-  variant="contained"
-  color="primary"
-  onClick={calculateSpendingPower}
->
+            <Button
+              sx={{ width: '20%', backgroundColor: 'primary', color: 'black' }}
+              variant="contained"
+              color="primary"
+              onClick={calculateSpendingPower}
+            >
               Calculate Spending Power
             </Button>
           </Box>
           {spendingPower > 0 && (
             <Typography variant="h6" align="center" mt={2} style={{ color: 'white' }}>
-            Spending Power: ${spendingPower.toFixed(2)}
-          </Typography>
-          
+              Spending Power: ${spendingPower.toFixed(2)}
+            </Typography>
           )}
         </Box>
       </CardContent>

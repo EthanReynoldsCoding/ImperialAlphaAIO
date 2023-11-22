@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }) => {
       } = await supabase.auth.getSession();
       if (error) throw error;
 
+      // console.log("session", session);
+
       if (session?.provider_token) {
         const oAuthToken = session.provider_token;
 
@@ -30,19 +32,21 @@ export const AuthProvider = ({ children }) => {
           data: { oAuthToken },
         });
         if (error) {
-          console.error(error);
+          console.log(error);
         }
 
         const valid = await checkIfValidUser(oAuthToken);
+
+        console.log("valid", valid);
 
         if (valid) {
           setSession(session);
           setUser(session?.user);
           setLoading(false);
         } else {
-          setSession(null);
-          setUser("non_valid_user");
-          setLoading(false);
+          setSession(session);
+            setUser(session?.user);
+            setLoading(false);
         }
       } else {
         if (session) {
@@ -59,8 +63,8 @@ export const AuthProvider = ({ children }) => {
             setUser(session?.user);
             setLoading(false);
           } else {
-            setSession(null);
-            setUser("non_valid_user");
+            setSession(session);
+            setUser(session?.user);
             setLoading(false);
           }
         }
@@ -68,6 +72,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      // console.log("onAuthStateChange");
       setSession(session);
       setUser(session?.user);
       setLoading(false);

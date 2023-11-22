@@ -57,7 +57,7 @@ function EditSection({ data, setDataUpdates }) {
   }, [setDataUpdates]);
 
   return (
-    <>
+    <div className="edit-section">
       <Stack direction="row" alignItems="center" spacing={1}>
         <IconButton aria-label="edit" size="small" color="success" onClick={EditSale}>
           <EditIcon fontSize="small" />
@@ -86,8 +86,10 @@ function EditSection({ data, setDataUpdates }) {
         </DialogActions>
       </Dialog>
 
-      <NewSale open={editOpen} handleClose={handleEditClose} edit={true} data={data} />
-    </>
+      {editOpen && (
+        <NewSale open={editOpen} handleClose={handleEditClose} edit={true} data={data} />
+      )}
+    </div>
   );
 }
 export default EditSection;
