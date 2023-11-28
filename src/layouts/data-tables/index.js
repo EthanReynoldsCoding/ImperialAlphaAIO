@@ -12,6 +12,11 @@ import dataTableData from "layouts/data-tables/data/dataTableData";
 import NewSale from "layouts/data-tables/components/Sale";
 import { supabase } from "supabaseClient.js";
 import { useAuth } from "hooks/Auth";
+import Grid from "@mui/material/Grid";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from "@mui/material/TextField";
 
 function TablesLayout() {
   const [sales, setSales] = useState([]);
@@ -19,6 +24,7 @@ function TablesLayout() {
   const [dataUpdated, setDataUpdates] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [isFilterDisabled, setIsFilterDisabled] = useState(true); // Initialize as disabled
+  const [dateFliterOpen, setDateFilterOpen] = useState(false);
 
   const { user } = useAuth();
   const userId = user?.id;
@@ -83,6 +89,10 @@ function TablesLayout() {
     getSales();
   };
 
+  const handleDateFilter = () => {
+    setDateFilterOpen(!dateFliterOpen);
+  };
+
   // Function to handle month selection
   const handleMonthSelect = (event) => {
     const selectedValue = event.target.value;
@@ -122,15 +132,56 @@ function TablesLayout() {
               </VuiTypography>
             </VuiBox>
             <VuiBox position="absolute" top={0} right={0} m={3}>
-              <div style={{ marginBottom: "10px", display: "flex", flexDirection: "row" }}>
-                <VuiButton
-                  variant="contained"
-                  color="primary"
-                  onClick={handleFilterByMonth}
-                  disabled={isFilterDisabled}
-                >
-                  Filter by Month
+              <div
+                style={{
+                  marginBottom: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <VuiButton variant="contained" color="primary" onClick={handleDateFilter}>
+                  Filter by Date
                 </VuiButton>
+                {dateFliterOpen && (
+                  <form
+                    style={{ position: "absolute", left: "-100%", width: "300px", top: "-50%" }}
+                  >
+                    <VuiBox mt={3}>
+                      <Grid container spacing={3}>
+                        <Grid item sm={12}>
+                          <VuiTypography variant="body1" color="white">
+                            From
+                          </VuiTypography>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              className="date_picker"
+                              // value={formValues.date}
+                              // onChange={handleChange}
+                              renderInput={(params) => <TextField {...params} />}
+                              // error={formErrors.date && true}
+                              // disabled={view}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                        <Grid item sm={12}>
+                          <VuiTypography variant="body1" color="white">
+                            To
+                          </VuiTypography>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              className="date_picker"
+                              // value={formValues.date}
+                              // onChange={handleChange}
+                              renderInput={(params) => <TextField {...params} />}
+                              // error={formErrors.date && true}
+                              // disabled={view}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                      </Grid>
+                    </VuiBox>
+                  </form>
+                )}
                 <VuiButton
                   variant="contained"
                   color="primary"
@@ -162,7 +213,10 @@ function TablesLayout() {
               <NewSale open={open} handleClose={handleClose} setDataUpdates={setDataUpdates} />
             )}
             <DataTable
-              table={{ columns: dataTableData.columns, rows: [...dataTableData.rows, ...sales] }}
+              table={{
+                columns: dataTableData.columns,
+                rows: [...dataTableData.rows, ...sales],
+              }}
               canSearch
               setDataUpdates={setDataUpdates}
             />
