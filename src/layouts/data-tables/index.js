@@ -17,14 +17,48 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import Icon from "@mui/material/Icon";
 
 function TablesLayout() {
+  const today = dayjs(new Date()).format();
+
   const [sales, setSales] = useState([]);
   const [open, setOpen] = useState(false);
   const [dataUpdated, setDataUpdates] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [isFilterDisabled, setIsFilterDisabled] = useState(true); // Initialize as disabled
   const [dateFliterOpen, setDateFilterOpen] = useState(false);
+  const [filterDates, setFilterDates] = useState({
+    from: today,
+    to: today,
+  });
+
+  const handleFromChange = (e) => {
+    const date = dayjs(e).format("MM/DD/YYYY");
+    setFilterDates({ ...filterDates, from: date });
+  };
+
+  const handleToChange = (e) => {
+    const date = dayjs(e).format("MM/DD/YYYY");
+    setFilterDates({ ...filterDates, to: date });
+  };
+
+  const filterSales = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase
+      .from("sales")
+      .select()
+      .eq("user_id", userId)
+      .gte("date", filterDates.from)
+      .lt("date", filterDates.to);
+
+    if (!error) {
+      setSales(data);
+    }
+  };
+
+  console.log(sales);
 
   const { user } = useAuth();
   const userId = user?.id;
@@ -145,9 +179,10 @@ function TablesLayout() {
                 {dateFliterOpen && (
                   <form
                     style={{ position: "absolute", left: "-100%", width: "300px", top: "-50%" }}
+                    onSubmit={filterSales}
                   >
                     <VuiBox mt={3}>
-                      <Grid container spacing={3}>
+                      <Grid container>
                         <Grid item sm={12}>
                           <VuiTypography variant="body1" color="white">
                             From
@@ -155,11 +190,9 @@ function TablesLayout() {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               className="date_picker"
-                              // value={formValues.date}
-                              // onChange={handleChange}
+                              value={filterDates.from}
+                              onChange={handleFromChange}
                               renderInput={(params) => <TextField {...params} />}
-                              // error={formErrors.date && true}
-                              // disabled={view}
                             />
                           </LocalizationProvider>
                         </Grid>
@@ -170,18 +203,23 @@ function TablesLayout() {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               className="date_picker"
-                              // value={formValues.date}
-                              // onChange={handleChange}
+                              value={filterDates.to}
+                              onChange={handleToChange}
                               renderInput={(params) => <TextField {...params} />}
                               // error={formErrors.date && true}
-                              // disabled={view}
                             />
                           </LocalizationProvider>
                         </Grid>
                       </Grid>
                     </VuiBox>
+                    <VuiBox mt={1} width="100%" display="flex" justifyContent="center">
+                      <VuiButton type="submit" variant="contained" color="info">
+                        <Icon sx={{ fontWeight: "bold" }}>search</Icon>
+                      </VuiButton>
+                    </VuiBox>
                   </form>
                 )}
+
                 <VuiButton
                   variant="contained"
                   color="primary"
