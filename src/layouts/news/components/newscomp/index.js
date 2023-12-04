@@ -76,7 +76,7 @@ const NewsComp = () => {
       );
       setBreakingNews(response.data.articles[0]);
     } catch (error) {
-      console.error("Error fetching breaking news:", error);
+      console.error("Error fetching breaking news:");
     }
   };
 
@@ -91,7 +91,7 @@ const NewsComp = () => {
       );
       setNews(filteredNews);
     } catch (error) {
-      console.error("Error fetching news:", error);
+      console.error("Error fetching news:");
     }
   };
 
