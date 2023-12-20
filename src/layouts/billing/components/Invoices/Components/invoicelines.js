@@ -5,8 +5,19 @@ import React from "react";
 import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import { IoDocumentText } from "react-icons/io5";
+import InvoiceDialog from "layouts/billing/components/Invoices/Components/InvoiceDialog";
 
 function InvoiceLines({ date, id, price, onClickPDF, selectedPaystub }) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <VuiBox
       component="li"
@@ -28,7 +39,7 @@ function InvoiceLines({ date, id, price, onClickPDF, selectedPaystub }) {
           {price}
         </VuiTypography>
         <VuiBox display="flex" alignItems="center" lineHeight={0} ml={3} sx={{ cursor: "pointer" }}>
-          <a onClick={onClickPDF}>
+          <a onClick={handleClickOpen}>
             <IoDocumentText color="#fff" size="15px" />
             <VuiTypography variant="button" fontWeight="medium" color="text">
               &nbsp;PDF
@@ -36,6 +47,7 @@ function InvoiceLines({ date, id, price, onClickPDF, selectedPaystub }) {
           </a>
         </VuiBox>
       </VuiBox>
+      <InvoiceDialog open={open} onClose={handleClose} selectedPaystub={selectedPaystub} />
     </VuiBox>
   );
 }

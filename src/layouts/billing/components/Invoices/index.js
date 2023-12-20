@@ -20,7 +20,9 @@ function Invoices({ openPaystubForm, openStubPage }) {
     async function fetchPaystubs() {
       const { data, error } = await supabase
         .from("paystubs")
-        .select("date, id, gross_pay, new_car_sales, used_car_sales, spiffs, other, taxes, period_beginning_date, period_ending_date, take_home")
+        .select(
+          "date, id, gross_pay, new_car_sales, used_car_sales, spiffs, other, taxes, period_beginning_date, period_ending_date, take_home"
+        )
         .order("date", { ascending: false });
 
       if (error) {
@@ -73,6 +75,7 @@ function Invoices({ openPaystubForm, openStubPage }) {
               id={`#${paystub.id}`}
               price={paystub.gross_pay}
               onClickPDF={() => handlePDFClick(paystub)} // Open StubPage on PDF click
+              selectedPaystub={paystub}
             />
           ))}
         </VuiBox>
@@ -82,12 +85,6 @@ function Invoices({ openPaystubForm, openStubPage }) {
 }
 
 export default Invoices;
-
-
-
-
-
-
 
 //const { user } = useAuth();
 //const { id: userId } = user;

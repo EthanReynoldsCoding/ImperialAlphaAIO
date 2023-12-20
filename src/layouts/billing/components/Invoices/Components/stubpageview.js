@@ -11,12 +11,11 @@ import Dialog from "@mui/material/Dialog";
 function StubPageView(props) {
   const { open, handleClose, edit, data, setDataUpdated, onClickPDF, selectedPaystub } = props;
 
-  
   return (
     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="lg">
       <Grid container className="tables_dialog">
         <Grid item xs={12}>
-          <Card 
+          <Card
             sx={{
               position: "relative", // Needed for absolute positioning
               backgroundColor: "rgba(16, 13, 34, 0.1)", // Transparent background color
@@ -37,15 +36,17 @@ function StubPageView(props) {
             >
               <CloseIcon />
             </div>
-            <VuiBox p={-3}> {/* Adjust padding here */}
+            <VuiBox p={-3}>
+              {" "}
+              {/* Adjust padding here */}
               <VuiBox>
-              <StubPage
-                selectedPaystub={props.selectedPaystub} // Pass the selectedPaystub
-                handleClose={handleClose}
-                edit={edit}
-                data={data}
-                setDataUpdated={setDataUpdated}
-/>
+                <StubPage
+                  selectedPaystub={props.selectedPaystub} // Pass the selectedPaystub
+                  handleClose={handleClose}
+                  edit={edit}
+                  data={data}
+                  setDataUpdated={setDataUpdated}
+                />
               </VuiBox>
             </VuiBox>
           </Card>
