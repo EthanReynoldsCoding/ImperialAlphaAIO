@@ -24,7 +24,7 @@ function CoverLayout({
 
   // Array of video sources
   const videos = [
-    'https://cdn.discordapp.com/attachments/1126046737870622750/1127805153421041764/funny-commercial-copy.mp4',
+    'https://cdn.discordapp.com/attachments/1126046737870622750/1127805153421041764/funny-commercial-copy.mp4?ex=663e3ea6&is=663ced26&hm=e535ba9004abe58f58784d5e56e25016fd3bd3049642128c7af47ef5bf7cec46&',
     'https://cdn.discordapp.com/attachments/1126046737870622750/1127812610125987840/gym-ad-copy.mp4',
     'https://cdn.discordapp.com/attachments/1126046737870622750/1127807686155698236/you-do-you-copy.mp4' ,
     'https://cdn.discordapp.com/attachments/1126046737870622750/1126436680770007060/fast-text-ad-copy.mp4'
