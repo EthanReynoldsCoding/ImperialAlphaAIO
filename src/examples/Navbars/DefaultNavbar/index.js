@@ -13,7 +13,7 @@ import colors from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 
 const logoUrl =
-  "https://media.discordapp.net/attachments/1238306251084009533/1238306353265770496/Inspired_Alpha_Logo_Transparent.png?ex=663ece29&is=663d7ca9&hm=17548926574a4b7a77991fc8131770d334f4bc8c63a43b37f04e9e7f6c6a225f&=&format=webp&quality=lossless&width=810&height=468";
+  "https://raw.githubusercontent.com/EthanReynoldsCoding/ImperialAlphaAIO/main/src/assets/images/Inspired%20Alpha%20Logo%20Transparent.png?token=GHSAT0AAAAAACR4WUF72YUKDJXOH4JGV5DAZR5QTIA";
 
 function DefaultNavbar({ transparent, light, action }) {
   const { borderCol } = colors;
