@@ -64,7 +64,7 @@ const SatisfactionRate = () => {
 						zIndex: '1000'
 					})}>
 					<VuiTypography color='text' variant='caption' display='inline-block' fontWeight='regular'>
-						{monthlyCars}
+						12
 					</VuiTypography>
 					<VuiBox
 						flexDirection='column'
