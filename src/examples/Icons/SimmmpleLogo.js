@@ -29,7 +29,7 @@ function SimmmpleLogo({ size }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <image
-        href="https://media.discordapp.net/attachments/1238306251084009533/1238306353265770496/Inspired_Alpha_Logo_Transparent.png?ex=66401fa9&is=663ece29&hm=7ebb3e8df7fcec0276275f7a435df3731a01df52dd1b82dccabae9e0bd44d266&=&format=webp&quality=lossless&width=810&height=468"
+        href="https://media.discordapp.net/attachments/1238306251084009533/1238306353265770496/Inspired_Alpha_Logo_Transparent.png?ex=66417129&is=66401fa9&hm=272a97ff0c7c824548d251158e513faa360c4de18dffc6ab95e55378a91505a5&=&format=webp&quality=lossless&width=810&height=468"
         width={size}
         height={size}
       />
