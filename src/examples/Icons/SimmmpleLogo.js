@@ -29,7 +29,7 @@ function SimmmpleLogo({ size }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <image
-        href="https://raw.githubusercontent.com/EthanReynoldsCoding/ImperialAlphaAIO/main/150%20x%20150%20png.png?token=GHSAT0AAAAAACXC2O7P5YJK2GJEUDNTJO3SZWZ5XCA"
+        href="https://github.com/EthanReynoldsCoding/ImperialAlphaAIO/blob/d89e0749367dc513511cd4c19754fb3a957454da/150%20x%20150%20png.png"
         width={size}
         height={size}
       />
