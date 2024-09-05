@@ -29,7 +29,7 @@ function SimmmpleLogo({ size }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <image
-        href="https://media.discordapp.net/attachments/1238306251084009533/1238306353265770496/Inspired_Alpha_Logo_Transparent.png?ex=66417129&is=66401fa9&hm=272a97ff0c7c824548d251158e513faa360c4de18dffc6ab95e55378a91505a5&=&format=webp&quality=lossless&width=810&height=468"
+        href="https://raw.githubusercontent.com/EthanReynoldsCoding/ImperialAlphaAIO/main/150%20x%20150%20png.png?token=GHSAT0AAAAAACXC2O7P5YJK2GJEUDNTJO3SZWZ5XCA"
         width={size}
         height={size}
       />
