@@ -29,7 +29,7 @@ function SimmmpleLogo({ size }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <image
-        href="https://github.com/EthanReynoldsCoding/ImperialAlphaAIO/blob/d89e0749367dc513511cd4c19754fb3a957454da/150%20x%20150%20png.png"
+        href="https://cdn.discordapp.com/attachments/970882949241262160/1282122601069543425/15020x2015020png.png?ex=66de3538&is=66dce3b8&hm=1ef1338c81ec97d652ac82bf8d317c7f114982ee2fca419972057060ac58ebc8&"
         width={size}
         height={size}
       />
